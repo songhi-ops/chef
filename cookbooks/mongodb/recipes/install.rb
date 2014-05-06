@@ -1,0 +1,247 @@
+#
+# Cookbook Name:: mongodb:install
+# Recipe:: install
+#
+# Copyright 2014, Songhi Entertainment
+#
+# All rights reserved - Do Not Redistribute
+#
+
+# install the 10gen repo if necessary
+include_recipe 'mongodb::10gen_repo' if node['mongodb']['install_method'] == '10gen'
+
+role = [
+    ["mongos", "mongos"],
+    ["replica", "mongod"],
+    ["configsrv", "mongo-config"],
+    ["standalone", "mongod"]
+]
+
+role.each do |role,file|
+
+    if node['mongodb']["#{role}"]
+
+        ## init_file = /etc/init.d/mongo-something
+        if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+          init_file = File.join(node['mongodb']['init_dir'], "#{file}.conf")
+          mode = '0644'
+        else
+          init_file = File.join(node['mongodb']['init_dir'], "#{file}")
+          mode = '0755'
+        end
+
+        ## config_file = /etc/mongo-something
+        config_file = File.join(node['mongodb']['configfile_path'], "#{file}.conf")
+
+
+        # Specific config settings according to role
+        case role
+        when  'mongos'
+            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongos.log'
+            node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongos.pid'
+            node.override['mongodb']['config']['dbpath'] = nil
+            node.override['mongodb']['config']['configdb'] = node['mongodb']['configdb_string']
+            node.override['mongodb']['config']['configsvr'] = nil
+            node.override['mongodb']['config']['replSet'] = nil
+            node.override['mongodb']['config']['shardsvr'] = nil
+        when  'configsrv'
+            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongo-config.log'
+            node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
+            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongo-config'
+            node.override['mongodb']['config']['configdb'] = nil
+            node.override['mongodb']['config']['configsvr'] = 'true'
+            node.override['mongodb']['config']['replSet'] = nil
+            node.override['mongodb']['config']['shardsvr'] = nil
+        when  'replica'
+            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongod.log'
+            node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongod.pid'
+            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongo'
+            node.override['mongodb']['config']['configdb'] = nil
+            node.override['mongodb']['config']['configsvr'] = nil
+            node.override['mongodb']['config']['replSet'] = node['mongodb']['replica_string']
+            if node['mongodb']['shard']
+                node.override['mongodb']['config']['shardsvr'] = 'true'
+            end
+        when  'standalone'
+            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongod.log'
+            node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongod.pid'
+            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongodb'
+            node.override['mongodb']['config']['configdb'] = nil
+            node.override['mongodb']['config']['configsvr'] = nil
+            node.override['mongodb']['config']['replSet'] = nil
+            node.override['mongodb']['config']['shardsvr'] = nil
+        end
+        
+        
+
+        # Create /etc/init.d/mongo
+        unless role == 'mongos'
+            template init_file do
+              cookbook node['mongodb']['template_cookbook']
+              source node['mongodb']['init_script_template']
+              group node['mongodb']['root_group']
+              owner 'root'
+              mode mode
+              variables(
+                :provides => 'mongod',
+                :configfile => config_file,
+                :ulimit => node['mongodb']['ulimit'],
+                :lock => file
+              )
+              action :create
+            end
+        end
+
+        # Create /etc/mongo
+
+
+        #Chef::Log.info ("#{role}: #{node['mongodb']['config']['dbpath']}")
+        template config_file do
+          cookbook node['mongodb']['template_cookbook']
+          source node['mongodb']['config_template']
+          group node['mongodb']['root_group']
+          owner 'root'
+          mode mode
+          variables(
+            :config => node['mongodb']['config']
+          )
+          action :create
+        end
+
+        # Create DB directory
+
+        unless ::File.directory?("#{node['mongodb']['config']['dbpath']}") or node['mongodb']['config']['dbpath'].nil?
+                directory node['mongodb']['config']['dbpath'] do
+                  owner 'mongod'
+                  group 'mongod'
+                  mode '0755'
+                  action :create
+                end
+        end
+
+
+        # Set Selinnux context
+
+        bash "Selinux context config file #{config_file}" do
+            user 'root'
+            code <<-EOH
+            chcon system_u:object_r:etc_t:s0 #{config_file}
+            EOH
+        end
+
+        unless node['mongodb']['config']['dbpath'].nil?
+            bash 'selinux context dbpath' do
+                user 'root'
+                code <<-EOF
+                chcon system_u:object_r:var_lib_t:s0 #{node['mongodb']['config']['dbpath']}
+                EOF
+            end
+        end
+
+        # Create initialization scripts (meant to be run manually
+        if role == 'replica'
+            array="#{node['mongodb']['config']['replSet']}".split("/").last.split(",")
+            template "/tmp/initialize-replica.js" do
+                cookbook node['mongodb']['template_cookbook']
+                source 'initialize-replica.js.erb'
+                group 'root'
+                owner 'root'
+                mode 600
+                variables(
+                    :array => array
+                )
+                action :create
+            end
+        end
+
+        
+        if node['mongodb']['shard']
+            #Chef::Log.info("AQUI: #{node['mongodb']['shard']}")
+            shard="#{node['mongodb']['replica_string']}".split(",").first
+            name="#{node['mongodb']['replica_string']}".split("/").first
+            #name=shard.split("/").first
+            template "/tmp/initialize-shard.js" do
+                cookbook node['mongodb']['template_cookbook']
+                source 'initialize-shard.js.erb'
+                group 'root'
+                owner 'root'
+                mode 600
+                variables(
+                    :shard => shard,
+                    :name => name
+                )
+                action :create
+            end
+        end
+    end
+end
+
+# Yum options
+case node['platform_family']
+when 'debian'
+  # this options lets us bypass complaint of pre-existing init file
+  # necessary until upstream fixes ENABLE_MONGOD/DB flag
+  packager_opts = '-o Dpkg::Options::="--force-confold"'
+when 'rhel'
+  # Add --nogpgcheck option when package is signed
+  # see: https://jira.mongodb.org/browse/SERVER-8770
+  packager_opts = '--nogpgcheck'
+else
+  packager_opts = ''
+end
+
+
+# Install
+package node[:mongodb][:package_name] do
+  options packager_opts
+  action :install
+  version node[:mongodb][:package_version]
+end
+
+#mongod user doesnt exists at the moment of creating the directories
+bash 'change ownership directories' do
+        user "root"
+        code <<-EOH
+                chown mongod.mongod -R /var/lib/mongo*
+        EOH
+end
+
+#Enable and start services:
+#
+role.each do |role,file|
+    if node['mongodb']["#{role}"] and role != 'mongos'
+        ## init_file = /etc/init.d/mongo-something
+        if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
+          init_file = File.join(node['mongodb']['init_dir'], "#{file}.conf")
+        else
+          init_file = File.join(node['mongodb']['init_dir'], "#{file}")
+        end
+
+        bash 'chkconfig' do
+            code <<-EOF
+            chkconfig #{file} on
+            EOF
+        end
+    end
+end
+
+if node['mongodb']["mongos"]
+    bash 'add mongos rc.local' do
+        code <<-EOF
+        egrep 'mongos -f /etc/mongos.conf' /etc/rc.local
+        if [ "$?" == "1" ]
+        then
+            echo 'mongos -f /etc/mongos.conf' >  /etc/rc.local
+        fi
+        EOF
+    end
+end
+
+
+bash 'stop iptables and disable selinux' do
+    user "root"
+    code <<-EOH
+        echo 0 > /selinux/enforce
+    EOH
+end
+

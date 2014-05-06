@@ -1,0 +1,53 @@
+set ruler
+set cursorline
+set number
+set nowrap
+
+set ignorecase
+set incsearch
+set smartcase
+set wildmenu
+set wildmode=list:longest,full
+set showmatch
+" set bg=light
+autocmd! BufNewFile * silent! 0r ~/.vim/templates/tmpl.%:e
+
+execute pathogen#infect()
+syntax on
+syntax enable
+
+filetype plugin indent on
+
+" Solarized stuff
+let g:solarized_termtrans = 1
+set background=dark
+colorscheme solarized
+
+"colorscheme blackboard
+
+" NERDTree
+map <C-n> :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | 
+let mapleader = ','
+let NERDTreeQuitOnOpen=1
+let NERDTreeIgnore = ['\.pyc$']
+"Indentation with spaces
+set expandtab
+set shiftwidth=4
+set softtabstop=4
+
+" Tab navigation
+nnoremap <F1> 1gt
+nnoremap <F2> 2gt
+nnoremap <F3> 3gt
+nnoremap <F4> 4gt
+nnoremap <F5> 5gt
+nnoremap <F6> 6gt
+nnoremap <F7> 7gt
+nnoremap <F8> 8gt
+nnoremap <F9> 9gt
+nnoremap <F10> 10gt
+
+map <C-m> :tabs<CR>
+
+set langmenu=en_US.UTF-8
