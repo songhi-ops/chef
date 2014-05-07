@@ -1,0 +1,40 @@
+upstream magic_app {
+<% @hosts.keys.sort.each do |ip| %>
+        server <%= @hosts[ip]["fqdn"] %>:8080;
+<% end %>
+}
+
+
+server {
+    listen  8080;
+    listen  8443 ssl;
+    server_name  dev.example.com;
+
+    ssl_certificate      /etc/ssl/certs/server.crt;
+    ssl_certificate_key /etc/ssl/certs/server.key;
+
+    # Block all script requests
+    location ~ /(cgi-bin|twiki|script|scripts) {
+        return 444;
+    }
+    location = /robots.txt {
+        root /var/www;
+    }
+
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location / {
+        proxy_pass http://magic_app;
+    }
+
+
+}
+
