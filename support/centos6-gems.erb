@@ -1,0 +1,66 @@
+bash -c '
+<%= "export http_proxy=\"#{knife_config[:bootstrap_proxy]}\"" if knife_config[:bootstrap_proxy] -%>
+
+yum update -y
+
+if [ ! -f /usr/bin/chef-client ]; then
+  tmp_dir=$(mktemp -d) || exit 1
+  pushd "$tmp_dir"
+
+  yum install -y wget
+
+  wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  rpm -Uvh epel-release-6-8.noarch.rpm
+  wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+  rpm -Uvh remi-release-6.rpm
+
+  yum install -y gcc gcc-c++ automake autoconf make
+
+  curl -L https://www.opscode.com/chef/install.sh | bash
+  
+
+  echo export PATH='/opt/chef/embedded/bin:$PATH' >> /root/.bashrc
+  source /root/.bashrc
+  gem install helpers
+  echo 192.168.0.123 chef.songhi-ops.com >> /etc/hosts
+
+  popd
+  rm -r "$tmp_dir"
+fi
+
+
+mkdir -p /etc/chef
+
+
+cat > /etc/chef/validation.pem <<'EOP'
+<%= validation_key %>
+EOP
+chmod 0600 /etc/chef/validation.pem
+
+<% if encrypted_data_bag_secret -%>
+cat > /etc/chef/encrypted_data_bag_secret <<'EOP'
+<%= encrypted_data_bag_secret %>
+EOP
+chmod 0600 /etc/chef/encrypted_data_bag_secret
+<% end -%>
+
+<%# Generate Ohai Hints -%>
+<% unless @chef_config[:knife][:hints].nil? || @chef_config[:knife][:hints].empty? -%>
+mkdir -p /etc/chef/ohai/hints
+
+<% @chef_config[:knife][:hints].each do |name, hash| -%>
+cat > /etc/chef/ohai/hints/<%= name %>.json <<'EOP'
+<%= hash.to_json %>
+EOP
+<% end -%>
+<% end -%>
+
+cat > /etc/chef/client.rb <<'EOP'
+<%= config_content %>
+EOP
+
+cat > /etc/chef/first-boot.json <<'EOP'
+<%= first_boot.to_json %>
+EOP
+
+<%= start_chef %>'
