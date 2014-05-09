@@ -1,17 +1,12 @@
 {
-  "name": "magic-app",
-  "chef_type": "role",
-  "env_run_lists": {
-  },
-  "description": "",
   "json_class": "Chef::Role",
   "run_list": [
     "recipe[operations]",
-    "recipe[tomcat]",
+    "recipe[nginx]",
     "recipe[iptables-ng]"
   ],
-  "override_attributes": {
-  },
+  "chef_type": "role",
+  "name": "magic-load-balancer",
   "default_attributes": {
     "iptables-ng": {
       "rules": {
@@ -20,16 +15,24 @@
             "000-established": {
               "rule": "-m state --state ESTABLISHED,RELATED -j ACCEPT"
             },
-            "default": "DROP [0:0]",
-            "200-tomcat": {
-              "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
+            "300-tomcat-ssl": {
+              "rule": "--protocol tcp --dport 8443 --match state --state NEW --jump ACCEPT"
             },
             "100-ssh": {
               "rule": "--protocol tcp --dport 22 --match state --state NEW --jump ACCEPT"
-            }
+            },
+            "200-tomcat": {
+              "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
+            },
+            "default": "DROP [0:0]"
           }
         }
       }
     }
+  },
+  "description": "",
+  "override_attributes": {
+  },
+  "env_run_lists": {
   }
 }

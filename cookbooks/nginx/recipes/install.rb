@@ -45,3 +45,14 @@ file "/etc/pki/tls/certs/server.crt" do
     group "root"
     mode 0644
 end
+
+
+include_recipe 'hosts'
+
+service 'nginx' do
+  service_name "nginx"
+  supports :restart => true, :status => true
+  action [:start, :enable]
+  retries 4
+  retry_delay 30
+end
