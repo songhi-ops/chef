@@ -1,9 +1,30 @@
 {
-  "chef_type": "role",
+  "env_run_lists": {
+  },
+  "name": "magic-mongodb-config",
+  "description": "Only config and mongos",
+  "run_list": [
+    "recipe[operations]",
+    "recipe[ulimit]",
+    "recipe[mongodb]",
+    "recipe[iptables-ng]"
+  ],
   "json_class": "Chef::Role",
+  "chef_type": "role",
   "override_attributes": {
   },
   "default_attributes": {
+    "ulimit": {
+      "users": {
+        "mongo": {
+          "filehandle_limit": 65000
+        }
+      }
+    },
+    "mongodb": {
+      "configsrv": true,
+      "standalone": false
+    },
     "iptables-ng": {
       "rules": {
         "filter": {
@@ -21,19 +42,6 @@
           }
         }
       }
-    },
-    "mongodb": {
-      "configsrv": true,
-      "standalone": false
     }
-  },
-  "run_list": [
-    "recipe[operations]",
-    "recipe[mongodb]",
-    "recipe[iptables-ng]"
-  ],
-  "description": "Only config and mongos",
-  "env_run_lists": {
-  },
-  "name": "magic-mongodb-config"
+  }
 }

@@ -1,18 +1,17 @@
 {
   "name": "magic-app",
   "chef_type": "role",
-  "env_run_lists": {
-  },
   "description": "",
-  "json_class": "Chef::Role",
-  "run_list": [
-    "recipe[operations]",
-    "recipe[tomcat]",
-    "recipe[iptables-ng]"
-  ],
   "override_attributes": {
   },
   "default_attributes": {
+    "ulimit": {
+      "users": {
+        "tomcat": {
+          "filehandle_limit": 65000
+        }
+      }
+    },
     "iptables-ng": {
       "rules": {
         "filter": {
@@ -20,16 +19,25 @@
             "000-established": {
               "rule": "-m state --state ESTABLISHED,RELATED -j ACCEPT"
             },
-            "default": "DROP [0:0]",
+            "100-ssh": {
+              "rule": "--protocol tcp --dport 22 --match state --state NEW --jump ACCEPT"
+            },
             "200-tomcat": {
               "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
             },
-            "100-ssh": {
-              "rule": "--protocol tcp --dport 22 --match state --state NEW --jump ACCEPT"
-            }
+            "default": "DROP [0:0]"
           }
         }
       }
     }
-  }
+  },
+  "run_list": [
+    "recipe[operations]",
+    "recipe[ulimit]",
+    "recipe[tomcat]",
+    "recipe[iptables-ng]"
+  ],
+  "env_run_lists": {
+  },
+  "json_class": "Chef::Role"
 }
