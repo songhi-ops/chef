@@ -10,8 +10,8 @@ server {
     listen  8443 ssl;
     server_name  dev.example.com;
 
-    ssl_certificate      /etc/ssl/certs/server.crt;
-    ssl_certificate_key /etc/ssl/certs/server.key;
+    ssl_certificate     /etc/pki/tls/certs/server.crt;
+    ssl_certificate_key /etc/pki/tls/private/server.key;
 
     # Block all script requests
     location ~ /(cgi-bin|twiki|script|scripts) {

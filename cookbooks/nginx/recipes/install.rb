@@ -1,7 +1,4 @@
 
-chef_gem "chef-vault"
-require "chef-vault"
-
 template "/etc/yum.repos.d/nginx.repo" do
   source "nginx.repo.erb"
   action :create # see actions section below
@@ -33,10 +30,17 @@ end
 
 
 
-vault_certificates = ChefVault::Item.load("certificates", "selfsigned-dev")
+cert = Chef::EncryptedDataBagItem.load("certificates", "selfsigned-dev")
 
-file "/etc/ssl/certs/server.key" do
-    content vault_certificates['selfsigned-dev']
+file "/etc/pki/tls/private/server.key" do
+    content cert['key']
+    owner "root"
+    group "root"
+    mode 0644
+end
+
+file "/etc/pki/tls/certs/server.crt" do
+    content cert['cert']
     owner "root"
     group "root"
     mode 0644
