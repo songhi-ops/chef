@@ -1,9 +1,35 @@
+
+                -------------
+                W A R N I N G
+                -------------
+            THIS IS A PRIVATE COMPUTER SYSTEM.
+
+
+This computer system including all related equipment, network devices (specifically
+including Internet access), and data stored in it are provided only for authorized use.
+All computer systems may be monitored for all lawful purposes, including to ensure that
+their use is authorized, for management of the system, to facilitate protection against
+unauthorized access, and to verify security procedures, survivability and operational
+security.
+Monitoring includes active attacks by authorized personnel and their entities to test or
+verify the security of the system. During monitoring, information may be examined,
+recorded, copied and used for authorized purposes. All information including personal
+information, placed on or sent over this system may be monitored. Uses of this system,
+authorized or unauthorized, constitutes consent to monitoring of this system.
+Unauthorized use may subject you to criminal prosecution. Evidence of any such
+unauthorized use collected during monitoring may be used for administrative, criminal or
+other adverse action. Use of this system constitutes consent to monitoring for these
+purposes.
+
+
+
 Overview
 ========
 
-Every Chef installation needs a Chef Repository. This is the place where cookbooks, roles, config files and other artifacts for managing systems with Chef will live. We strongly recommend storing this repository in a version control system such as Git and treat it like source code.
+SONGHI ENTERTAINMENT
+Operations GIT repository
 
-While we prefer Git, and make this repository available via GitHub, you are welcome to download a tar or zip archive and use your favorite version control system to manage the code.
+
 
 Repository Directories
 ======================
