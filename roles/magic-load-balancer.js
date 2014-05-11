@@ -37,7 +37,10 @@
     "recipe[operations]",
     "recipe[ulimit]",
     "recipe[nginx]",
-    "recipe[iptables-ng]"
+    "recipe[iptables-ng]",
+    "recipe[users::developers]",
+    "recipe[users::sysadmins]",
+    "recipe[sudo]"
   ],
   "chef_type": "role",
   "env_run_lists": {

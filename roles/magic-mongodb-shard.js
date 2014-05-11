@@ -49,7 +49,10 @@
     "recipe[operations]",
     "recipe[ulimit]",
     "recipe[mongodb]",
-    "recipe[iptables-ng]"
+    "recipe[iptables-ng]",
+    "recipe[users::developers]",
+    "recipe[users::sysadmins]",
+    "recipe[sudo]"
   ],
   "env_run_lists": {
   }
