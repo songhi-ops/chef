@@ -3,19 +3,19 @@ bash -c '
 
 yum update -y
 
+tmp_dir=$(mktemp -d) || exit 1
+pushd "$tmp_dir"
+
+yum install -y wget
+
+wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpm -Uvh epel-release-6-8.noarch.rpm
+wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+rpm -Uvh remi-release-6.rpm
+
+yum install -y gcc gcc-c++ automake autoconf make git
+
 if [ ! -f /usr/bin/chef-client ]; then
-  tmp_dir=$(mktemp -d) || exit 1
-  pushd "$tmp_dir"
-
-  yum install -y wget
-
-  wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-  rpm -Uvh epel-release-6-8.noarch.rpm
-  wget <%= "--proxy=on " if knife_config[:bootstrap_proxy] %>http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-  rpm -Uvh remi-release-6.rpm
-
-  yum install -y gcc gcc-c++ automake autoconf make git
-
   curl -L https://www.opscode.com/chef/install.sh | bash
   
 
