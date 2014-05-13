@@ -34,7 +34,7 @@ end
 
 
 
-cert = Chef::EncryptedDataBagItem.load("certificates", "selfsigned-dev")
+cert = Chef::EncryptedDataBagItem.load("certificates", "wildcard-songhi")
 
 file "/etc/pki/tls/private/server.key" do
     content cert['key']
