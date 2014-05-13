@@ -40,6 +40,7 @@ end
 
 tomcat_pkgs.compact!
 
+
 tomcat_pkgs.each do |pkg|
   package pkg do
     action :install
@@ -47,6 +48,7 @@ tomcat_pkgs.each do |pkg|
   end
 end
 
+# Restore this when remove the hack
 include_recipe 'java'
 
 directory node['tomcat']['endorsed_dir'] do
@@ -175,6 +177,27 @@ unless node['tomcat']['truststore_file'].nil?
     mode '0644'
   end
 end
+
+##HACK !!!
+#bash "install tomcat" do
+#    code <<-EOF
+#    yum -y erase tomcat
+#    yum -y install --enablerepo=epel-testing tomcat-7.0.33-4.el6
+#    EOF
+#end
+#
+#template "/etc/tomcat/tomcat.conf" do
+#    source 'tomcat.conf.erb'
+#    owner 'tomcat'
+#    group 'tomcat'
+#    mode '0664'
+#    notifies :restart, 'service[tomcat]'
+#end
+#
+#include_recipe 'java'
+
+## END HACK
+
 
 service 'tomcat' do
   case node['platform']
