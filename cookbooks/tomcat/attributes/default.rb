@@ -19,7 +19,7 @@
 ## HACK !!
 #In centos epel repo package is called tomcat. So leaving base_verison empty
 #
-default['tomcat']['base_version'] = '6'
+default['tomcat']['base_version'] = ''
 default['tomcat']['port'] = 8080
 default['tomcat']['proxy_port'] = nil
 default['tomcat']['ssl_port'] = 8443

@@ -19,7 +19,11 @@ end
 template "/etc/nginx/conf.d/default.conf" do
   source "default.conf.erb"
   mode 0644
-  variables(:hosts => hosts)
+  variables(
+      :hosts => hosts,
+      :http => node["nginx"]["http_port"],
+      :https => node["nginx"]["https_port"]
+  )
 end
 
 template "/etc/nginx/nginx.conf" do

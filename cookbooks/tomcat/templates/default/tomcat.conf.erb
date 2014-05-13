@@ -23,6 +23,7 @@ CATALINA_TMPDIR="/var/cache/tomcat/temp"
 
 # Use JAVA_OPTS to set java.library.path for libtcnative.so
 #JAVA_OPTS="-Djava.library.path=/usr/lib"
+JAVA_OPTS="${JAVA_OPTS} -Djavax.sql.DataSource.Factory=org.apache.commons.dbcp.BasicDataSourceFactory"
 
 # What user should run tomcat
 TOMCAT_USER="tomcat"

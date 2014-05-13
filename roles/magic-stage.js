@@ -19,6 +19,12 @@
             "default": "DROP [0:0]",
             "300-https": {
               "rule": "--protocol tcp --dport 443 --match state --state NEW --jump ACCEPT"
+            },
+            "400-tomcat": {
+              "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
+            },
+            "500-tomcat-ssl": {
+              "rule": "--protocol tcp --dport 8443 --match state --state NEW --jump ACCEPT"
             }
           }
         }
@@ -28,11 +34,14 @@
       "users": {
         "nginx": {
           "filehandle_limit": 65000
+        },
+        "tomcat": {
+          "filehandle_limit": 65000
         }
       }
     }
   },
-  "name": "magic-load-balancer",
+  "name": "magic-stage",
   "run_list": [
     "recipe[operations]",
     "recipe[ulimit]",
@@ -40,7 +49,9 @@
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
-    "recipe[sudo]"
+    "recipe[sudo]",
+    "recipe[tomcat]",
+    "recipe[mongodb]"
   ],
   "chef_type": "role",
   "env_run_lists": {

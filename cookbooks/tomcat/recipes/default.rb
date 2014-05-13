@@ -49,7 +49,7 @@ tomcat_pkgs.each do |pkg|
 end
 
 # Restore this when remove the hack
-include_recipe 'java'
+#include_recipe 'java'
 
 directory node['tomcat']['endorsed_dir'] do
   mode '0755'
@@ -110,6 +110,8 @@ else
     notifies :restart, 'service[tomcat]'
   end
 end
+
+
 
 template "#{node['tomcat']['config_dir']}/server.xml" do
   source 'server.xml.erb'
@@ -179,22 +181,22 @@ unless node['tomcat']['truststore_file'].nil?
 end
 
 ##HACK !!!
-#bash "install tomcat" do
-#    code <<-EOF
-#    yum -y erase tomcat
-#    yum -y install --enablerepo=epel-testing tomcat-7.0.33-4.el6
-#    EOF
-#end
-#
-#template "/etc/tomcat/tomcat.conf" do
-#    source 'tomcat.conf.erb'
-#    owner 'tomcat'
-#    group 'tomcat'
-#    mode '0664'
-#    notifies :restart, 'service[tomcat]'
-#end
-#
-#include_recipe 'java'
+bash "install tomcat" do
+    code <<-EOF
+    yum -y erase tomcat
+    yum -y install --enablerepo=epel-testing tomcat-7.0.33-4.el6
+    EOF
+end
+
+template "/etc/tomcat/tomcat.conf" do
+    source 'tomcat.conf.erb'
+    owner 'tomcat'
+    group 'tomcat'
+    mode '0664'
+    notifies :restart, 'service[tomcat]'
+end
+
+include_recipe 'java'
 
 ## END HACK
 

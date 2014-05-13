@@ -6,8 +6,8 @@ upstream magic_app {
 
 
 server {
-    listen  8080;
-    listen  8443 ssl;
+    listen  <%= @http %>;
+    listen  <%= @https %> ssl;
     server_name  dev.example.com;
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
