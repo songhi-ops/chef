@@ -1,6 +1,12 @@
 {
   "id": "juan",
-  "groups": [
+  "groups_default": [
+    "sysadmins"
+  ],
+  "groups_dev": [
+    "sysadmins"
+  ],
+  "groups_stage": [
     "sysadmins"
   ],
   "ssh_keys": [
