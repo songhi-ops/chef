@@ -8,5 +8,8 @@
   "default_attributes": {
   },
   "override_attributes": {
+        "nginx": {
+        "certificate": "wildcard-songhi"
+      }
   }
 }
