@@ -18,3 +18,7 @@ end
 package 'iftop' do
   action :install
 end
+
+package 'screen' do
+  action :install
+end
