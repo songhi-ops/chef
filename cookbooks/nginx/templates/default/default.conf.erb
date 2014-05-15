@@ -9,11 +9,17 @@ upstream magic_app {
 
 }
 
+server {
+    listen      80;
+    server_name <%= node['fqdn'] %> ;
+    rewrite     ^   https://$server_name$request_uri? permanent;
+}
+
 
 server {
     listen  <%= @http %>;
     listen  <%= @https %> ssl;
-    server_name  dev.example.com;
+    server_name <%= node['fqdn'] %> ;
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
     ssl_certificate_key /etc/pki/tls/private/server.key;
