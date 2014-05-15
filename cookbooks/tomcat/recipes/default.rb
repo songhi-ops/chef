@@ -181,6 +181,10 @@ unless node['tomcat']['truststore_file'].nil?
 end
 
 ##HACK !!!
+# https://bugzilla.redhat.com/show_bug.cgi?id=1080195
+# REMOVE HACK WHEN: tomcat-7.0.33-4.el6 or higher makes it to epel repo
+#
+
 bash "install tomcat" do
     code <<-EOF
     yum -y erase tomcat
