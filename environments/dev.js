@@ -8,8 +8,11 @@
   "default_attributes": {
   },
   "override_attributes": {
-      "nginx": {
-        "certificate": "selfsigned-dev"
-      }
+    "nginx": {
+      "certificate": "selfsigned-dev"
+    },
+    "operations": {
+      "PS1": "[\\u@\\h \\W]"
+    }
   }
 }

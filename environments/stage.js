@@ -8,8 +8,11 @@
   "default_attributes": {
   },
   "override_attributes": {
-        "nginx": {
-        "certificate": "wildcard-songhi"
-      }
+    "nginx": {
+      "certificate": "wildcard-songhi"
+    },
+    "operations": {
+      "PS1": "\\[\\e[1;31m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] "
+    }
   }
 }

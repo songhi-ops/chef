@@ -66,7 +66,7 @@ end
 
 #Adding alias to bashrc
 #
-bash 'add alias to .bashrc' do
+bash 'add alias to .bashrc and copy everything to  /etc/skel' do
     code <<-EOF
     egrep 'alias vi=vim' #{node['operations']['bashrc_file']}
     if [ "$?" == "1" ]
@@ -79,6 +79,10 @@ bash 'add alias to .bashrc' do
         then
         echo 'export EDITOR='`which vim` >> #{node['operations']['bashrc_file']}
     fi
+
+    cp -R #{node['operations']['vim']['vim_directory']} /etc/skel/
+    cp #{node['operations']['vim']['vimrc_file']} /etc/skel/
+    cp -f #{node['operations']['bashrc_file']} /etc/skel/
     EOF
 end
 

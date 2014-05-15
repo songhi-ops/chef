@@ -11,4 +11,5 @@
 include_recipe 'operations::packages'
 include_recipe 'operations::vim'
 include_recipe 'operations::motd'
+include_recipe 'operations::misc'
 
