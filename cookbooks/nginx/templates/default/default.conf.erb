@@ -1,7 +1,12 @@
 upstream magic_app {
-<% @hosts.keys.sort.each do |ip| %>
-        server <%= @hosts[ip]["fqdn"] %>:8080;
+<% if @hosts.nil?  %>
+    <% @hosts.keys.sort.each do |ip| %>
+            server <%= @hosts[ip]["fqdn"] %>:8080;
+    <% end %>
+<% else %>
+    server <%= node['fqdn'] %>:8080;
 <% end %>
+
 }
 
 
