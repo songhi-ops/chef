@@ -25,6 +25,9 @@
             },
             "500-tomcat-ssl": {
               "rule": "--protocol tcp --dport 8443 --match state --state NEW --jump ACCEPT"
+            },
+            "600-mongod": {
+              "rule": "--protocol tcp --dport 27017 --match state --state NEW --jump ACCEPT"
             }
           }
         }
