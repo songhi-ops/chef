@@ -12,7 +12,7 @@
       "certificate": "wildcard-songhi"
     },
     "operations": {
-      "PS1": "\\[\\e[1;31m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] "
+      "PS1": "\\[\\e[0;33m\\][\\u@\\h \\W]\\$\\[\\e[0m\\] "
     }
   }
 }
