@@ -15,7 +15,7 @@ end
 
 
 default['mongodb']['config']['bind_ip'] = '0.0.0.0'
-default['mongodb']['config']['logpath'] = '/var/log/mongodb/mongodb.log'
+default['mongodb']['config']['logpath'] = '/data/log/mongodb/mongodb.log'
 default['mongodb']['config']['logappend'] = true
 default['mongodb']['config']['pidfilepath'] = nil
 default['mongodb']['config']['dbpath'] = nil

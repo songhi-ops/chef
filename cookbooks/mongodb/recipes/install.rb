@@ -37,7 +37,7 @@ role.each do |role,file|
         # Specific config settings according to role
         case role
         when  'mongos'
-            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongos.log'
+            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongos.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongos.pid'
             node.override['mongodb']['config']['dbpath'] = nil
             node.override['mongodb']['config']['configdb'] = node['mongodb']['configdb_string']
@@ -45,17 +45,17 @@ role.each do |role,file|
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
         when  'configsrv'
-            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongo-config.log'
+            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-config.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
-            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongo-config'
+            node.override['mongodb']['config']['dbpath'] = '/data/lib/mongo-config'
             node.override['mongodb']['config']['configdb'] = nil
             node.override['mongodb']['config']['configsvr'] = 'true'
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
         when  'replica'
-            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongod.log'
+            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongod.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongod.pid'
-            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongo'
+            node.override['mongodb']['config']['dbpath'] = '/data/lib/mongo'
             node.override['mongodb']['config']['configdb'] = nil
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = node['mongodb']['replica_string']
@@ -63,9 +63,9 @@ role.each do |role,file|
                 node.override['mongodb']['config']['shardsvr'] = 'true'
             end
         when  'standalone'
-            node.override['mongodb']['config']['logpath'] = '/var/log/mongodb/mongod.log'
+            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongod.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongod.pid'
-            node.override['mongodb']['config']['dbpath'] = '/var/lib/mongodb'
+            node.override['mongodb']['config']['dbpath'] = '/data/lib/mongodb'
             node.override['mongodb']['config']['configdb'] = nil
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = nil
@@ -108,17 +108,28 @@ role.each do |role,file|
           action :create
         end
 
-        # Create DB directory
+        # Create DB  and log directory
 
         unless ::File.directory?("#{node['mongodb']['config']['dbpath']}") or node['mongodb']['config']['dbpath'].nil?
                 directory node['mongodb']['config']['dbpath'] do
                   owner 'mongod'
                   group 'mongod'
                   mode '0755'
+                  recursive true
                   action :create
                 end
         end
 
+
+        unless ::File.directory?(File.dirname("#{node['mongodb']['config']['logpath']}"))
+                directory File.dirname(node['mongodb']['config']['logpath']) do
+                  owner 'mongod'
+                  group 'mongod'
+                  mode '0755'
+                  recursive true
+                  action :create
+                end
+        end
 
         # Set Selinnux context
 
@@ -202,7 +213,7 @@ end
 bash 'change ownership directories' do
         user "root"
         code <<-EOH
-                chown mongod.mongod -R /var/lib/mongo*
+                chown mongod.mongod -R /data
         EOH
 end
 
