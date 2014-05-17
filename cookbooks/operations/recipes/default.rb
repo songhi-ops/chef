@@ -14,4 +14,5 @@ include_recipe 'operations::motd'
 include_recipe 'operations::misc'
 include_recipe 'operations::selinux'
 include_recipe 'operations::sshd'
+include_recipe 'ntp'
 
