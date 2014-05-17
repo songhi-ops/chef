@@ -256,3 +256,18 @@ bash 'stop iptables and disable selinux' do
     EOH
 end
 
+# Nedded to download package
+package "yum-utils" do
+  action :install
+end
+
+#Needed to freeze file system and do backup
+package "xfsprogs" do
+  action :install
+end
+
+bash "Download package" do
+    code <<-EOF
+    yumdownloader #{node[:mongodb][:package_name]} --destdir /data
+    EOF
+end
