@@ -15,4 +15,5 @@ include_recipe 'operations::misc'
 include_recipe 'operations::selinux'
 include_recipe 'operations::sshd'
 include_recipe 'ntp'
+include_recipe 'operations::ec2-metadata'
 

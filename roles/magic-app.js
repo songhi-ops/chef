@@ -25,6 +25,9 @@
             "200-tomcat": {
               "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
             },
+            "300-tomcat-shutdown": {
+              "rule": "--protocol tcp --dport 8005 --match state --state NEW --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }

@@ -200,6 +200,16 @@ template "/etc/tomcat/tomcat.conf" do
     notifies :restart, 'service[tomcat]'
 end
 
+
+template "/etc/tomcat/server.xml" do
+    source 'server-hack.xml.erb'
+    owner 'tomcat'
+    group 'tomcat'
+    mode '0664'
+    notifies :restart, 'service[tomcat]'
+end
+
+
 include_recipe 'java'
 
 ## END HACK
