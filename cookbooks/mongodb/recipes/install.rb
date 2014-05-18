@@ -241,7 +241,7 @@ bash 'change ownership directories' do
         EOH
 end
 
-#Enable and start services:
+#Enable services:
 #
 role.each do |role,file|
     if node['mongodb']["#{role}"] and role != 'mongos'
