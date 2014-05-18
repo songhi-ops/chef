@@ -16,4 +16,5 @@ include_recipe 'operations::selinux'
 include_recipe 'operations::sshd'
 include_recipe 'ntp'
 include_recipe 'operations::ec2-metadata'
+include_recipe 'operations::timezone'
 
