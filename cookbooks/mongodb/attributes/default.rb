@@ -11,6 +11,7 @@ default[:mongodb][:install_method] = 'distro'
 default[:mongodb][:template_cookbook] = 'mongodb'
 default[:mongodb][:root_group] = 'root'
 default[:mongodb][:configfile_path] = '/etc/'
+default[:mongodb][:configfile_physical_path] = '/data/'
 default[:mongodb][:mongos] = false
 default[:mongodb][:configsrv] = false
 default[:mongodb][:replica] = false

@@ -30,8 +30,9 @@ role.each do |role,file|
           mode = '0755'
         end
 
-        ## config_file = /etc/mongo-something
+        ## config_file = /data/mongo-something
         config_file = File.join(node['mongodb']['configfile_path'], "#{file}.conf")
+        config_physical_file = File.join(node['mongodb']['configfile_physical_path'], "#{file}.conf")
 
 
         # Specific config settings according to role
@@ -96,7 +97,7 @@ role.each do |role,file|
 
 
         #Chef::Log.info ("#{role}: #{node['mongodb']['config']['dbpath']}")
-        template config_file do
+        template config_physical_file do
           cookbook node['mongodb']['template_cookbook']
           source node['mongodb']['config_template']
           group node['mongodb']['root_group']
@@ -107,6 +108,13 @@ role.each do |role,file|
           )
           action :create
         end
+
+        link config_file do
+            to config_physical_file
+            group node['mongodb']['root_group']
+            owner 'root'
+        end
+
 
         # Create DB  and log directory
 
@@ -201,6 +209,22 @@ else
   packager_opts = ''
 end
 
+# Nedded to download package
+package "yum-utils" do
+  action :install
+end
+
+
+bash "Download package" do
+    code <<-EOF
+    ls /data/packages
+    if [ "$?" != "0" ]
+    then
+        mkdir /data/packages
+        yumdownloader --resolve --destdir /data/packages #{node[:mongodb][:package_name]} 
+    fi
+    EOF
+end
 
 # Install
 package node[:mongodb][:package_name] do
@@ -217,7 +241,7 @@ bash 'change ownership directories' do
         EOH
 end
 
-#Enable and start services:
+#Enable services:
 #
 role.each do |role,file|
     if node['mongodb']["#{role}"] and role != 'mongos'
@@ -256,18 +280,8 @@ bash 'stop iptables and disable selinux' do
     EOH
 end
 
-# Nedded to download package
-package "yum-utils" do
-  action :install
-end
-
 #Needed to freeze file system and do backup
 package "xfsprogs" do
   action :install
 end
 
-bash "Download package" do
-    code <<-EOF
-    yumdownloader #{node[:mongodb][:package_name]} --destdir /data
-    EOF
-end
