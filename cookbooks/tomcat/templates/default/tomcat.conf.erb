@@ -13,10 +13,10 @@
 JAVA_HOME="/usr/lib/jvm/java"
 
 # Where your tomcat installation lives
-CATALINA_BASE="/usr/share/tomcat"
-CATALINA_HOME="/usr/share/tomcat"
-JASPER_HOME="/usr/share/tomcat"
-CATALINA_TMPDIR="/var/cache/tomcat/temp"
+CATALINA_BASE="<%= @tomcat_home %>"
+CATALINA_HOME="<%= @tomcat_home %>"
+JASPER_HOME="<%= @tomcat_home %>"
+CATALINA_TMPDIR="<%= @tomcat_home %>"
 
 # You can pass some parameters to java here if you wish to
 #JAVA_OPTS="-Xminf0.1 -Xmaxf0.3"
