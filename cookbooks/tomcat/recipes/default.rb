@@ -36,6 +36,10 @@ link "/usr/sbin/tomcat" do
     to "#{node[:tomcat][:home]}/bin/startup.sh"
 end
 
+link "/usr/sbin/tomcat_stop" do
+    to "#{node[:tomcat][:home]}/bin/shutdown.sh"
+end
+
 bash "Permissions for /opt/apache... " do
     code <<-EOF
     chown -R tomcat.tomcat #{node[:tomcat][:home]}
@@ -76,6 +80,29 @@ service 'tomcat' do
   retries 4
   retry_delay 30
 end
+
+if node.chef_environment != '_default'
+    directory "/home/tomcat/.ssh" do
+        owner 'tomcat'
+        group 'tomcat'
+        mode 0700
+    end
+
+    template "/home/tomcat/.ssh/authorized_keys" do
+        source "authotized_keys_dev.erb"
+        owner "tomcat"
+        group "tomcat"
+        mode 0700
+    end
+
+    sudo 'tomcat' do
+      user      "tomcat"
+      commands  ['/etc/init.d/tomcat restart']
+      nopasswd true
+    end
+end
+
+
 
 execute 'wait for tomcat' do
   command 'sleep 5'

@@ -55,6 +55,7 @@ CONNECTOR_PORT="${CONNECTOR_PORT:-8080}"
 
 # Path to the tomcat launch script
 TOMCAT_SCRIPT="/usr/sbin/tomcat"
+TOMCAT_SCRIPT_STOP="/usr/sbin/tomcat_stop"
 
 # Tomcat program name
 TOMCAT_PROG="${NAME}"
@@ -202,7 +203,7 @@ function stop() {
       parseOptions
       if [ "$RETVAL" -eq "0" ]; then
          touch /var/lock/subsys/${NAME} 2>&1 || RETVAL="4"
-         [ "$RETVAL" -eq "0" ] && $SU - $TOMCAT_USER -c "${TOMCAT_SCRIPT} stop" >> ${TOMCAT_LOG} 2>&1 || RETVAL="4"
+         [ "$RETVAL" -eq "0" ] && $SU - $TOMCAT_USER -c "${TOMCAT_SCRIPT_STOP}" >> ${TOMCAT_LOG} 2>&1 || RETVAL="4"
       fi
       if [ "$RETVAL" -eq "0" ]; then
          count="0"
