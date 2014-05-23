@@ -105,11 +105,13 @@ def aws_eips(connection, supress_output=False):
 """
 Mongo DB shard template
 """
-
+type_t1_micro = 't1.micro'
+type_m3_xlarge = 'm3.xlarge'
+type_r3_2xlarge = 'r3.2xlarge'
 
 
 mongo_shard_east_1a_paravirtual = {
-        'image_id' : 'ami-00ef0668',
+        'image_id' : 'ami-82fd15ea',
         'key_name' : 'operations',
         'instance_type' : 't1.micro',
         'subnet_id' : 'subnet-ab4449ed',
@@ -123,6 +125,21 @@ mongo_shard_east_1a_paravirtual = {
 mongo_shard_east_1c_paravirtual = mongo_shard_east_1a_paravirtual 
 mongo_shard_east_1c_paravirtual['subnet_id'] = 'subnet-c0d6f9e8'
 mongo_shard_east_1c_paravirtual['region'] = 'us-east-1c'
+
+
+# mongo_shard_east_1a_hvn 
+
+mongo_shard_east_1a_hvn = mongo_shard_east_1a_paravirtual 
+mongo_shard_east_1a_hvn['image_id'] =  'ami-8afa12e2'
+
+
+# mongo_shard_east_1c_hvn 
+
+mongo_shard_east_1c_hvn = mongo_shard_east_1a_hvn 
+mongo_shard_east_1c_hvn['subnet_id'] = 'subnet-c0d6f9e8'
+mongo_shard_east_1c_hvn['region'] = 'us-east-1c'
+
+
 
 
 def aws_launch (template, name, instance_type=None, region=None):
