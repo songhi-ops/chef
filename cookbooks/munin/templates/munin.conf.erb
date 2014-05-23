@@ -1,0 +1,44 @@
+<VirtualHost *:773>
+
+    DocumentRoot /var/www/html/
+
+#    ErrorLog  /var/log/httpd/munin.messaging-error.log
+#    CustomLog /var/log/httpd/munin.messaging-access.log combined
+
+    RewriteEngine On
+    # workaround for some static content
+    RewriteRule /munin/static/(.*) /var/www/html/munin/static/$1          [L]
+    # HTML
+    RewriteCond %{REQUEST_URI} .html$ [or]
+    RewriteCond %{REQUEST_URI} =/
+    RewriteRule ^/munin/(.*)          /var/www/cgi-bin/munin-cgi-html/$1 [L]
+
+    # Images
+    RewriteRule ^/munin-cgi/munin-cgi-graph/(.*) /$1
+
+    RewriteCond %{REQUEST_URI} ^/munin-cgi/(.*)
+    RewriteCond %{REQUEST_URI} .png$
+    RewriteRule ^/(.*) /var/www/cgi-bin/munin-cgi-graph/$1 [L]
+
+    <directory /var/www/html/munin>
+    
+         AuthUserFile /etc/munin/munin-htpasswd
+         AuthName "Munin"
+         AuthType Basic
+         require valid-user
+         
+         
+         ExpiresActive On
+         ExpiresDefault M310
+    
+    </directory>
+
+    <Directory "/var/www/cgi-bin">
+        Options +ExecCGI
+        SetHandler cgi-script
+    </Directory>
+
+
+
+
+</VirtualHost>
