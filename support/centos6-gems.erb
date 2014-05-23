@@ -33,7 +33,7 @@ mkdir -p /etc/chef
 ########################
 #  Modify THIS
 #
-curl -u operations:juanjo http://chef-server.example.com:801/secret_key -o /etc/chef/encrypted_data_bag_secret
+curl -u operations:juanjo http://chef.songhi-dev.com:801/secret_key -o /etc/chef/encrypted_data_bag_secret
 
 cat > /etc/chef/validation.pem <<'EOP'
 <%= validation_key %>
