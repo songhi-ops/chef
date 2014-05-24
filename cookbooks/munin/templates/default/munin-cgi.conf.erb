@@ -1,0 +1,48 @@
+# http://munin.readthedocs.org/en/latest/example/webserver/apache-virtualhost.html
+<VirtualHost *:802>
+    #ServerName munin.example.org
+    #ServerAlias munin
+    #ServerAdmin  info@example.org
+
+    DocumentRoot /var/www/html/munin/
+
+    ErrorLog  /var/log/httpd/munin.error.log
+    CustomLog /var/log/httpd/munin.access.log combined
+
+    # Rewrites
+    RewriteEngine On
+
+    # Static content in /static
+    RewriteRule ^/favicon.ico /var/www/html/munin/static/favicon.ico [L]
+    RewriteRule ^/static/(.*) /var/www/html/munin/static/$1          [L]
+
+    # workaround for some static content
+    RewriteRule /favicon.ico /var/www/html/munin/static/favicon.ico [L]
+    RewriteRule /static/(.*) /var/www/html/munin/static/$1          [L]
+
+    # HTML
+    RewriteCond %{REQUEST_URI} .html$ [or]
+    RewriteCond %{REQUEST_URI} =/
+    RewriteRule ^/(.*)          /var/www/cgi-bin/munin-cgi-html/$1 [L]
+
+    # Images
+    # - remove path to munin-cgi-graph, if present
+    RewriteRule ^/munin-cgi/munin-cgi-graph/(.*) /$1
+
+    RewriteCond %{REQUEST_URI} .png$
+    RewriteRule ^/(.*) /var/www/cgi-bin/munin-cgi-graph/$1 [L]
+
+    #ScriptAlias /munin-cgi/munin-cgi-graph /var/www/cgi-bin/munin-cgi-graph
+
+    # Ensure we can run (fast)cgi scripts
+    <Directory "/var/www/cgi-bin">
+        Options +ExecCGI
+        <IfModule mod_fcgid.c>
+            SetHandler fcgid-script
+        </IfModule>
+        <IfModule !mod_fcgid.c>
+            SetHandler cgi-script
+        </IfModule>
+    </Directory>
+</VirtualHost>
+

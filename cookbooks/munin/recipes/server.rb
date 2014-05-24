@@ -25,4 +25,40 @@ template "/etc/munin/munin.conf" do
     })
 end
 
+template "/etc/httpd/conf/httpd.conf" do
+    source "httpd.conf.erb"
+    notifies :restart, 'service[httpd]'
+end
+
+
+template "/etc/httpd/conf.d/munin-cgi.conf" do
+    source "munin-cgi.conf.erb"
+    notifies :restart, 'service[httpd]'
+end
+
+template "/etc/httpd/conf.d/munin.conf" do
+    source "munin.conf.html.erb"
+    notifies :restart, 'service[httpd]'
+end
+
+cookbook_file "/etc/munin/munin-htpasswd" do
+    source "munin-htpasswd"
+    notifies :restart, 'service[httpd]'
+end
+
+service 'httpd' do
+  service_name "httpd"
+  supports :restart => true, :status => true
+  action [:start, :enable]
+  retries 4
+  retry_delay 30
+end
+
+service 'munin-node' do
+  service_name "munin-node"
+  supports :restart => true, :status => true
+  action [:start, :enable]
+  retries 4
+  retry_delay 30
+end
 
