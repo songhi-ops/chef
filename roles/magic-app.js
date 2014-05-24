@@ -28,6 +28,9 @@
             "300-tomcat-shutdown": {
               "rule": "--protocol tcp --dport 8005 --match state --state NEW --jump ACCEPT"
             },
+            "400-munin": {
+              "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
@@ -41,7 +44,8 @@
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
-    "recipe[sudo]"
+    "recipe[sudo]",
+    "recipe[munin::client]"
   ],
   "env_run_lists": {
   },

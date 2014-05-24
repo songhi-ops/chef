@@ -25,9 +25,4 @@ template "/etc/munin/munin.conf" do
     })
 end
 
-bash "restart httpd, munin-node" do
-    code <<-EOF
-    /etc/init.d/httpd restart
-    /etc/init.d/munin-node restart
-    EOF
-end
+

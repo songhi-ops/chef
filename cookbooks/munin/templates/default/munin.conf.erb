@@ -113,7 +113,7 @@ server_types. each do |servers, label|
 <%servers.each do |srv|%>
     [<%=label%>;<%=srv['hostname']%>]
         address <%=srv['ipaddress']%>
-        use_node_name yes"
+        use_node_name yes
 <%end%>
 
 <%end%>
