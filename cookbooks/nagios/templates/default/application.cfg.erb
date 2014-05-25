@@ -1,0 +1,29 @@
+define host {
+        use                     linux-server
+        host_name               <%= @hostname %>
+        alias                   <%= @hostname %>
+        address                 <%= @ipaddress %>
+        }
+
+#http://serverfault.com/questions/209566/what-warning-and-critical-values-to-use-for-check-load
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             load
+        check_command                   check_load!<%= @cores * .9 %>,<%= @cores * .7 %>,<%= @cores * .5 %>!<%= @cores %>,<%= @cores * .8 %>,<%= @cores * .6 %>
+        }
+
+
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             root_partition
+        check_command                   check_disk!20%!10%!/
+        }
+
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             memory
+        check_command                   check_memory!94!95
+        }
