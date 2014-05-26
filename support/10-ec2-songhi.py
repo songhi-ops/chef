@@ -102,12 +102,25 @@ def aws_eips(connection, supress_output=False):
 
     return tuple_eips
 
-"""
-Mongo DB shard template
-"""
 type_t1_micro = 't1.micro'
 type_m3_xlarge = 'm3.xlarge'
 type_r3_2xlarge = 'r3.2xlarge'
+
+#stage_template
+
+stage_template = {
+        'image_id' : 'ami-eb6b0182',
+        'key_name' : 'operations',
+        'instance_type' : 'm3.medium',
+        'subnet_id' : 'subnet-362f021e',
+        'security_group_ids' : ['sg-5935bd3c'],
+        'connection' : conn_east,
+        'region' : 'us-east-1c',
+        }
+
+"""
+Mongo DB shard template
+"""
 
 
 mongo_shard_east_1a_paravirtual = {

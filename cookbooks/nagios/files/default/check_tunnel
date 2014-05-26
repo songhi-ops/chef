@@ -1,0 +1,16 @@
+#!/bin/bash
+netstat -lpn | egrep "127.0.0.1:$1" | egrep LISTEN &> /dev/null
+result="$?"
+
+if [ "0" == "$result" ]
+	then
+	echo "OK: port $1 open and listening"
+	exit 0
+fi
+
+
+if [ "0" != "$result" ]
+	then
+	echo "Critical: port $1 not listening"
+	exit 2
+fi

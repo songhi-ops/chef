@@ -1,0 +1,16 @@
+#!/usr/bin/python
+import sys
+import requests
+url = 'http://localhost:8010/system/version'
+try:
+	response = requests.get(url)
+except:
+	print "Critical: couldn't connect"
+	exit (2)
+
+if (response.status_code != 200):
+	print "Critical: Status code: " + str(response.status_code)
+	print response.json()
+	exit (2)
+else:
+	print "Ok: version number " + response.json()[0]['version_buildno']

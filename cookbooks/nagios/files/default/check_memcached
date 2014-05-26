@@ -1,0 +1,200 @@
+#!/bin/bash
+# Copyright Bento Loewenstein
+# licensend under WTFPL: http://sam.zoy.org/wtfpl/
+# Customized to work in CB FreeBSD environment: JAH-9/2010+
+#
+# Not sure if this script will run on CSH, KSH or other shells
+# Anyone who makes it work on those, please let me know.
+# Bento Loewenstein <bento.ls@gmail.com>
+#
+# Change log:
+#
+# V 0.5: Replaced expect by netcat.
+#        Thanks to Robert Hugh <rhugh at tango.me> for the patch
+#
+
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+STATE_DEPENDENT=4
+
+get_stats()
+{
+   _NC=`which nc`
+   if [ "$?" -ne "0" ]; then
+      printf "UNKNOWN - nc command not found\n"
+      exit $STATE_UNKNOWN
+   fi
+   RESULT=`$_NC -w $TIMEOUT $2 $3<<NCEND
+      stats
+      quit
+NCEND
+ `
+__RET=$?
+
+STATS=`echo "$RESULT" | grep "${1}"|sed -e 's/\r//'`
+
+printf "%s\n" "$STATS"
+
+return $__RET
+}
+
+calc_rate()
+{
+   __PARONE=$1
+   __PARTWO=$2
+
+   if [ $(($__PARONE+$__PARTWO)) -ne 0 ];
+   then
+      __RATE=`echo "(${__PARONE}*100)/(${__PARONE}+${__PARTWO})"|bc -l`
+
+      if [ -z "$__RATE" ];
+      then
+         __RATE=0
+         __DISPR=0
+      else
+         __DISPR=`echo "$__RATE+0.5"|bc -l`
+      fi
+      printf " %1.0f%%|rate=%1.12g" "$__DISPR" "$__RATE"
+   else
+      printf " No rate"
+   fi
+}
+
+printusage()
+{
+	echo "check_memcached v. 0.2"
+        echo "$0 -v hitrate/getrate/other -H host -p TCP/IP port"
+        echo "for \"other\" specify -l <line item> to return the value of a specific stat."
+        echo "in the case you want to check for thresholds for the line-item,"
+        echo "specify -W and -C for warning and critical level."
+        echo ""
+        exit $STATE_UNKNOWN
+}
+
+while getopts 'v:l:H:p:W:C:' OPTION
+do
+  case $OPTION in
+  v)    OPFLAG=1
+        OPER="$OPTARG"
+        ;;
+  l)    OFLAG=1
+        PSTAT="$OPTARG"
+        ;;
+  H)    HSFLAG=1
+        HOST="$OPTARG"
+        ;;
+  p)    PTFLAG=1
+        PORT="$OPTARG"
+        ;;
+  W)    WARNW="$OPTARG"
+        ;;
+  C)    WARNC="$OPTARG"
+        ;;
+  ?)    echo "Argument invalid: $OPTION"
+        printusage
+        exit $STATE_UNKNOWN
+        ;;
+  esac
+done
+
+if [ -z "$PTFLAG" ]
+then
+   PTFLAG=1		# No port specified, assume memcachedes defaul: 11211
+   PORT="11211"
+fi
+
+if [ -z "$OPFLAG" ] 
+then
+   OPFLAG=1             # assume "hitrate" if nothing is informed
+   OPER="hitrate"   
+fi
+
+if [ -z "$HSFLAG"  ]
+then
+   echo "Argument invalid: $OPTION"   # Hey, I can't work without a host name
+   printusage                         # So, it's not like you didn't ask for it...
+   exit $STATE_UNKNOWN
+fi
+
+case $OPER in
+   hitrate)
+      __STATS=`get_stats "get_" "$HOST" "$PORT"`
+      __RETVAL=$?
+      if [ "$__RETVAL" -eq "0" ] 
+      then
+
+         __VALONE=`echo "$__STATS"|awk '/get_hits/ {print $3}'| sed -e 's/[^0-9]//Ig' `
+         __VALTWO=`echo "$__STATS"|awk '/get_misses/ {print $3}'| sed -e 's/[^0-9]//Ig' `
+
+         __RATE=`calc_rate "$__VALONE" "$__VALTWO"`
+
+         echo "OK - hit rate: $__RATE"
+         exit 0
+      else
+         printf "ERROR - Exit status is: %d\n" "$__RETVAL"
+	 exit $STATE_CRITICAL
+      fi
+   ;;
+   getrate)
+      __STATS=`get_stats "cmd_" "$HOST" "$PORT"`
+      __RETVAL=$?
+      if [ "$__RETVAL" -eq "0" ]
+      then
+
+         __VALONE=`echo "$__STATS"|awk '/cmd_get/ {print $3}'| sed -e 's/[^0-9]//Ig' `
+         __VALTWO=`echo "$__STATS"|awk '/cmd_set/ {print $3}'| sed -e 's/[^0-9]//Ig' `
+
+         __RATE=`calc_rate "$__VALONE" "$__VALTWO"`
+
+         echo "OK - command rate: $__RATE"
+         exit 0
+      else
+         printf "ERROR - Exit status is: %d\n" "$__RETVAL"
+         exit $STATE_CRITICAL
+      fi
+   ;;
+   other)
+      if [ -z $PSTAT ]
+      then
+         PSTAT="curr_connections"
+      fi
+      __STATS=`get_stats "$PSTAT" "$HOST" "$PORT"`
+      __RETVAL=$?
+
+      if [ "$__RETVAL" -ne "0" ]
+      then
+         printf "ERROR - query ended with return code: %d\n" "$__RETVAL"
+         exit $STATE_CRITICAL
+      elif [ -z "$__STATS" ]
+      then
+         echo "UNKNOWN - no line item returned"
+         exit $STATE_UNKNOWN
+      fi
+
+      __LINEVAL=`echo "$__STATS" | awk '{print $3}'`
+
+      [[ -z "$WARNC" ]] && WARNC="$__LINEVAL"
+      [[ -z "$WARNW" ]] && WARNW="$__LINEVAL"
+
+      if [ "$__LINEVAL" -gt "$WARNC" ]
+      then
+         echo "CRITICAL - Line item too high: $__STATS"
+         exit $STATE_CRITICAL
+      elif [ "$__LINEVAL" -gt "$WARNW" ]
+      then
+         echo "WARNING - Line item high: $__STATS"
+         exit $STATE_WARNING
+      else   
+         echo "OK - Line item: $__STATS"
+         exit 0
+      fi   
+   ;;
+   *)
+      echo "UNKNOWN - no parameter"
+      exit $STATE_UNKNOWN
+   ;;
+esac
+
+exit $__RETVAL

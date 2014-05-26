@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+#
+# Leo Eraly <leo@kangaroot.net>
+# simple perl script that checks if a postgresql db is up
+# requires perl-dbd-pg and perl-dbi
+use DBI;
+use strict;
+
+my %ERRORS=('DEPENDENT'=>4,'UNKNOWN'=>3,'OK'=>0,'WARNING'=>1,'CRITICAL'=>2);
+
+my $dbtype = "Pg";
+my $dbuser = "postgres";
+my $dbname = "template1";
+my $dbhost = "127.0.0.1";
+my $dbpass = "";
+my $query = "SELECT COUNT(*) from pg_stats";
+my $state;
+my $comment;
+
+my $dbh = DBI->connect("dbi:$dbtype:dbname=$dbname;host=$dbhost;" , $dbuser , $dbpass , {PrintError => 0});
+
+if(not $dbh)
+{
+ $state = "CRITICAL";
+ print("$state = failed to connect\n");
+ exit($ERRORS{$state});
+}
+
+
+if($dbh->ping)
+{
+	my $sth = $dbh->prepare($query);
+	$sth->execute();
+	if($sth->rows > 0)
+	{
+		$state = "OK";
+		$comment = "Result returned " . $sth->rows . " rows";
+	}
+	else
+	{
+		$state = "WARNING";
+		$comment = "Result returned no rows";
+	}
+}
+else
+{
+	$state = "CRITICAL";
+}
+
+if($state =~ "CRITICAL")
+{
+	print "$state"," - ",$comment,"\n";
+}
+else
+{
+	print "$state"," = ",$comment,"\n";
+}
+
+exit($ERRORS{$state});

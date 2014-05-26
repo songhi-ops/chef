@@ -37,16 +37,65 @@ cookbook_file "/etc/nagios/passwd" do
     notifies :restart, 'service[httpd]'
 end
 
+plugins = [
+    "check_api",
+    "check_database_pgsql",
+    "check_elasticsearch",
+    "check_error_log",
+    "check_exit_status",
+    "check_haproxy",
+    "check_kannel",
+    "check_memcached",
+    "check_memory",
+    "check_mountpoints",
+    "check_nginx",
+    "check_pg_streaming_replication",
+    "check_redis",
+    "check_tunnel",
+    "check_varnishbackends"
+]
 
-applications = search(:node, "role:magic-app", %w(ipaddress hostname cpu))
-load_balancers = search(:node, "role:magic-load-balancer", %w(ipaddress hostname cpu))
-databases = search(:node, "role:magic-mongodb*", %w(ipaddress hostname cpu))
+plugins.each do | plugin |
+    cookbook_file "/usr/lib64/nagios/plugins/#{ plugin }" do
+        source plugin
+        owner 'root'
+        group 'root'
+        mode 0755
+    end
+end
+
+cookbook_file "/etc/nagios/objects/commands.cfg" do
+    source "commands.cfg"
+end
+
+server_types = [
+    [ 'applications', 'role:magic-app' ],
+    [ 'load_balancers', 'role:magic-load-balancer' ],
+    [ 'data_bases', 'role:magic-mongodb*' ]
+]
+
+server_types.each do | servers | 
+    search(:node, servers[1], %w(ipaddress hostname cpu)).each do | server |
+    template "/etc/nagios/conf.d/#{server[:hostname]}.cfg" do
+            source "#{servers[0]}.cfg.erb"  
+            variables ({
+                'hostname' => server[:hostname],
+                'ipaddress' => server[:ipaddress],
+                'cores' => server[:cpu].count
+            
+            })
+            notifies :reload, 'service[nagios]'
+        end
+    end
+end
+
+
 
 
 
 service 'nagios' do
   service_name "nagios"
-  supports :restart => true, :status => true
+  supports :restart => true, :status => true, :reload => true
   action [:start, :enable]
   retries 4
   retry_delay 30

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+search=`echo $1 | sed 's/,/|/g'`
+diff $2 $2_old | egrep -i "$search" &> /dev/null
+if [ "$?" == "0" ]
+then
+	search=`echo $1 | sed 's/,/|/g'`
+	match=`diff $2 $2_old | grep --binary-files=text -Pio "$search[ a-zA-Z0-9_.:]*" | tail -n 1`
+	echo "CRITICAL - string: $match found in $2"
+	exit 2
+else
+	echo "OK"
+	exit 0
+fi
+

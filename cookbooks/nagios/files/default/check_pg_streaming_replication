@@ -1,0 +1,102 @@
+#!/bin/bash
+
+
+PG_USER=repuser
+PSQL_BIN=/usr/bin/psql
+PG_DEFAULT_PORT=5432
+MASTER_CONN_INFOS='host=10.1.1.43 user=repuser password=dccewally78totigres'
+TOLERANCE=10000
+DEBUG=0
+[ "$1" == "-d" ] && DEBUG=1
+
+function psql_get () {
+	echo "$1"| $PSQL_BIN -p $PG_DEFAULT_PORT -U $PG_USER  -t -P format=unaligned postgres
+}
+
+function debug() {
+	if [ $DEBUG -eq 1 ]
+	then
+		echo "[DEBUG] $1"
+	fi
+}
+
+# Postgres is running ?
+if [ $DEBUG -eq 0 ]
+then
+	psql_get '\q' 2> /dev/null
+else
+	psql_get '\q' 
+fi
+if [ $? -ne 0 ]
+then
+	echo "CRITICAL : Postgres is not running !!!"
+	exit 2
+fi
+debug "Postgres is running"
+
+RECOVERY_MODE=0
+[ $( psql_get 'SELECT pg_is_in_recovery();' ) == "t" ] && RECOVERY_MODE=1
+
+	
+# Check recovery mode
+if [ $RECOVERY_MODE -ne 1 ]
+then
+	echo "CRITICAL : Not in recovery mode !"
+	exit 2
+fi
+debug "Postgres is in recovery mode"
+
+#http://vibhorkumar.wordpress.com/2013/02/18/pg_xlog_location_diff-function-for-postgreqsqlppas/
+LAST_XLOG_RECEIVE=$(psql_get "SELECT pg_last_xlog_receive_location()" | awk --field-separator / '{ printf "ibase=16; "$1"*FF000000+"$2"\n" }' | bc)
+
+debug "Last xlog file receive : $LAST_XLOG_RECEIVE"
+LAST_XLOG_REPLAY=$(psql_get "SELECT pg_last_xlog_replay_location()" | awk --field-separator / '{ printf "ibase=16; "$1"*FF000000+"$2"\n" }' | bc)
+debug "Last xlog file replay : $LAST_XLOG_REPLAY"
+
+
+debug "Master connection informations : $MASTER_CONN_INFOS"
+
+M_HOST=$( echo "$MASTER_CONN_INFOS"|sed 's/^.*host= *\([^ ]*\) *.*$/\1/' )
+if [ ! -n "$M_HOST" ]
+then
+	echo "UNKNOWN : Can't figure host ip"
+	exit 3
+fi
+debug "Master host : $M_HOST"
+
+M_PORT=$( echo "MASTER_CONN_INFOS" |  grep -Pio 'port=[0-9]*' | sed 's/port=//' )
+
+if [ ! -n "$M_PORT" ]
+then
+	debug "Master port not specified, using default : $PG_DEFAULT_PORT"
+	M_PORT=$PG_DEFAULT_PORT
+else
+	debug "Master port : $M_PORT"
+fi
+	
+# Get current xlog file from master
+M_CUR_XLOG="$( echo "SELECT pg_current_xlog_location()"| $PSQL_BIN -U $PG_USER  -h $M_HOST -p $M_PORT -t -P format=unaligned postgres  | awk --field-separator / '{ printf "ibase=16; "$1"*FF000000+"$2"\n" }' | bc)"
+if [ ! -n "$M_CUR_XLOG" ]
+then
+	echo "UNKNOWN : Can't retreive current xlog from master server"
+	exit 3
+fi
+debug "Master current xlog : $M_CUR_XLOG"
+
+DIFF=$(bc <<< $LAST_XLOG_RECEIVE-$M_CUR_XLOG | awk ' { if($1>=0) { print $1} else {print $1*-1 }}')
+debug "Difference : $DIFF"
+if [ $DIFF -gt $TOLERANCE ]
+then
+	echo "CRITICAL : Master current xlog position is higher than last received xlog by $DIFF positions"
+	exit 2
+fi
+
+DIFF=$(bc <<< $LAST_XLOG_RECEIVE-$LAST_XLOG_REPLAY | awk ' { if($1>=0) { print $1} else {print $1*-1 }}' )
+if [ $DIFF  -gt $TOLERANCE ]
+then
+	echo "WARNING : Replay xlog is lagging behind last received xlog by $DIFF"
+	exit 1
+fi
+
+echo "OK : Hot-standby server is uptodate"
+exit 0

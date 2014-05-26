@@ -10,7 +10,7 @@ define service {
         use                             generic-service
         host_name                       <%= @hostname %>
         service_description             load
-        check_command                   check_load!<%= @cores * .9 %>,<%= @cores * .7 %>,<%= @cores * .5 %>!<%= @cores %>,<%= @cores * .8 %>,<%= @cores * .6 %>
+        check_command                   check_load!<%= @cores * 0.9 %>,<%= @cores * 0.7 %>,<%= @cores * 0.5 %>!<%= @cores %>,<%= @cores * 0.8 %>,<%= @cores * 0.6 %>
         }
 
 
