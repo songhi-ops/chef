@@ -22,6 +22,8 @@
 include_recipe 'java'
 include_recipe 'ark'
 
+package 'redhat-lsb-core.x86_64'
+
 user "tomcat" do
     action :create
 end
