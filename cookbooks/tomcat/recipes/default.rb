@@ -34,6 +34,10 @@ ark File.basename("#{node[:tomcat][:home]}") do
     action :put
 end
 
+link "#{node[:tomcat][:symlink]}" do
+    to "#{node[:tomcat][:home]}"
+end
+
 link "/usr/sbin/tomcat" do
     to "#{node[:tomcat][:home]}/bin/startup.sh"
 end
