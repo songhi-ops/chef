@@ -12,7 +12,7 @@ end
 
 bash "Adding history settings" do
     code <<-EOF
-    egrep 'PROMPT_COMMAND="history -a;$PROMPT_COMMAND";' /etc/profile
+    egrep 'PROMPT_COMMAND="history -a;\$PROMPT_COMMAND";' /etc/profile
     if [ "$?" == "1" ]
     then
         echo 'PROMPT_COMMAND="history -a;$PROMPT_COMMAND";' >> /etc/profile

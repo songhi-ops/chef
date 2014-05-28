@@ -31,6 +31,12 @@
             "400-munin": {
               "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
             },
+            "500-nagios": {
+              "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
+            },
+            "600-ping": {
+              "rule": "--protocol icmp --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
@@ -45,7 +51,8 @@
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
     "recipe[sudo]",
-    "recipe[munin::client]"
+    "recipe[munin::client]",
+    "recipe[nagios::client]"
   ],
   "env_run_lists": {
   },

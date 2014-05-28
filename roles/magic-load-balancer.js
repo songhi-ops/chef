@@ -16,10 +16,13 @@
             "200-http": {
               "rule": "--protocol tcp --dport 80 --match state --state NEW --jump ACCEPT"
             },
-            "default": "DROP [0:0]",
             "300-https": {
               "rule": "--protocol tcp --dport 443 --match state --state NEW --jump ACCEPT"
-            }
+            },
+            "400-ping": {
+              "rule": "--protocol icmp --jump ACCEPT"
+            },
+            "default": "DROP [0:0]"
           }
         }
       }

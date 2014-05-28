@@ -21,6 +21,14 @@ cookbook_file "/etc/nagios/cgi.cfg" do
     notifies :restart, 'service[nagios]'
 end
 
+cookbook_file "/etc/nagios/objects/localhost.cfg" do
+    owner 'root'
+    group 'root'
+    source 'localhost.cfg'
+    mode 0664
+    notifies :restart, 'service[nagios]'
+end
+
 cookbook_file "/etc/httpd/conf/httpd.conf" do
     owner 'root'
     group 'root'

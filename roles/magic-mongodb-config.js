@@ -41,6 +41,9 @@
             "200-mongo-config": {
               "rule": "--protocol tcp --dport 27019 --match state --state NEW --jump ACCEPT"
             },
+            "300-ping": {
+              "rule": "--protocol icmp --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
