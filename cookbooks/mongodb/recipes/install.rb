@@ -89,7 +89,7 @@ role.each do |role,file|
                 :ulimit => node['mongodb']['ulimit'],
                 :lock => file
               )
-              action :create
+              action :create_if_missing
             end
         end
 
@@ -106,7 +106,7 @@ role.each do |role,file|
           variables(
             :config => node['mongodb']['config']
           )
-          action :create
+          action :create_if_missing
         end
 
         link config_file do
