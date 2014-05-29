@@ -41,6 +41,9 @@
             "500-ping": {
               "rule": "--protocol icmp --jump ACCEPT"
             },
+            "600-ntp": {
+              "rule": "--protocol udp --dport 123 --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
