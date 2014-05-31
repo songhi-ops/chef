@@ -9,6 +9,7 @@ version          '0.15.12'
 depends 'java'
 depends 'ark'
 depends 'openssl'
+depends 'sudo'
 
 supports 'debian'
 supports 'ubuntu'

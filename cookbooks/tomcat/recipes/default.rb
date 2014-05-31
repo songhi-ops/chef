@@ -22,7 +22,7 @@
 include_recipe 'java'
 include_recipe 'ark'
 
-package 'redhat-lsb-core.x86_64'
+package 'redhat-lsb-core'
 
 user "tomcat" do
     action :create
@@ -32,6 +32,25 @@ ark File.basename("#{node[:tomcat][:home]}") do
     url node['tomcat']['tarball'] 
     path File.dirname("#{node[:tomcat][:home]}")
     action :put
+end
+
+bash "Removing applications" do
+    code <<-EOF
+    rm -rf #{node[:tomcat][:home]}/webapps/*
+    EOF
+end
+
+#Setting UMASK :
+cookbook_file "#{node[:tomcat][:home]}/bin/catalina.sh" do
+    owner 'tomcat'
+    group 'tomcat'
+    source 'catalina.sh'
+end
+
+cookbook_file "#{node[:tomcat][:home]}/conf/server.xml" do
+    owner 'tomcat'
+    group 'tomcat'
+    source 'server.xml'
 end
 
 link "#{node[:tomcat][:symlink]}" do
