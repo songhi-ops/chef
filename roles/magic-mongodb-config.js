@@ -10,7 +10,9 @@
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
-    "recipe[sudo]"
+    "recipe[sudo]",
+    "recipe[munin::client]",
+    "recipe[nagios::client]"
   ],
   "json_class": "Chef::Role",
   "chef_type": "role",
