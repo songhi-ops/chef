@@ -5,7 +5,7 @@ bash "Adding $PS1" do
     egrep 'export PS1' /etc/profile
     if [ "$?" == "1" ]
     then
-        echo "export PS1='#{node[:operations][:PS1]}'" >> /etc/profile
+        echo "export PS1='#{node[:operations][:PS1]} '" >> /etc/profile
     fi
     EOF
 end

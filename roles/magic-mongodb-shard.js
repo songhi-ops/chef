@@ -44,6 +44,12 @@
             "600-ntp": {
               "rule": "--protocol udp --dport 123 --jump ACCEPT"
             },
+            "700-munin": {
+              "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
+            },
+            "800-nagios": {
+              "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
@@ -58,7 +64,11 @@
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
-    "recipe[sudo]"
+    "recipe[sudo]",
+    "recipe[munin::client]",
+    "recipe[nagios::client]"
+
+
   ],
   "env_run_lists": {
   }
