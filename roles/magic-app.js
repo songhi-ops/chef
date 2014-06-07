@@ -40,6 +40,12 @@
             "700-ntp": {
               "rule": "--protocol udp --dport 123 --jump ACCEPT"
             },
+            "800-munin": {
+              "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
+            },
+            "900-nagios": {
+              "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
