@@ -26,7 +26,7 @@
               "rule": "--protocol tcp --dport 8080 --match state --state NEW --jump ACCEPT"
             },
             "300-tomcat-shutdown": {
-              "rule": "--protocol tcp --dport 8005 --match state --state NEW --jump ACCEPT"
+              "rule": "--protocol tcp --dport 9626 --match state --state NEW -s localhost --jump ACCEPT"
             },
             "400-munin": {
               "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
