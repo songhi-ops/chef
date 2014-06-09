@@ -134,3 +134,23 @@ execute 'wait for tomcat' do
   action :nothing
 end
 
+environment = ''
+
+case node.chef_environment
+when '_default'
+    environment= 'prod'
+when '_stage'
+    environment = 'stage'
+when '_dev'
+    environment = 'dev'
+end
+
+template "/usr/bin/songhi-env" do
+    source 'songhi-env.erb'
+    user 'tomcat'
+    group 'tomcat'
+    mode 0775
+    variables ({
+    :env => environment
+    })
+end
