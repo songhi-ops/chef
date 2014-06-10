@@ -19,7 +19,7 @@
 
 hosts     = {}
 
-search(:node, "*:*", %w(ipaddress fqdn dns_aliases)) do |n|
+search(:node, "*:*", %w(ipaddress machinename dns_aliases)) do |n|
   hosts[n["ipaddress"]] = n
 end
 

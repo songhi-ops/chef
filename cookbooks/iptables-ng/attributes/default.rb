@@ -19,7 +19,8 @@
 #
 
 # Which IP versions to manage rules for
-default['iptables-ng']['enabled_ip_versions'] = [4, 6]
+#default['iptables-ng']['enabled_ip_versions'] = [4, 6]
+default['iptables-ng']['enabled_ip_versions'] = [4]
 
 # Which tables to manage:
 # When using containered setup (OpenVZ, Docker, LXC) it might might be

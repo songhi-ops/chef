@@ -12,7 +12,7 @@ end
 
 hosts     = {}
 
-search(:node, "role:magic-app", %w(ipaddress fqdn dns_aliases)) do |n|
+search(:node, "role:magic-app", %w(ipaddress machinename dns_aliases)) do |n|
   hosts[n["ipaddress"]] = n
 end
 
