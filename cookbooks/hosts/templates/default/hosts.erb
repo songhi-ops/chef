@@ -4,6 +4,6 @@
 127.0.0.1               localhost.localdomain localhost
 ::1             localhost6.localdomain6 localhost6
 <% @hosts.keys.sort.each do |ip| %>
-<%= ip %> <%= @hosts[ip]["machinename"] %> <%= (@hosts[ip]["dns_aliases"] || []).sort.join(" ") %>
+<%= ip %> <%= @hosts[ip]["fqdn"] %> <%= (@hosts[ip]["dns_aliases"] || []).sort.join(" ") %>
 <% end %>
 

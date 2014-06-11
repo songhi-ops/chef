@@ -187,7 +187,7 @@ Applications
 template_application_east_1a = {
         'image_id' : 'ami-c2c93baa',
         'key_name' : 'operations',
-        'instance_type' : 'c3.4xlarge',
+        'instance_type' : 'c3.2xlarge',
         'subnet_id' : 'subnet-ab4449ed',
         'security_group_ids' : ['sg-74016511'],
         'connection' : conn_east,

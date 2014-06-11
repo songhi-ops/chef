@@ -1,10 +1,10 @@
 upstream magic_app {
 <% if !@hosts.nil?  %>
     <% @hosts.keys.sort.each do |ip| %>
-            server <%= @hosts[ip]["machinename"] %>:8080;
+            server <%= @hosts[ip]["fqdn"] %>:8080;
     <% end %>
 <% else %>
-    server <%= node['machinename'] %>:8080;
+    server <%= node['fqdn'] %>:8080;
 <% end %>
 
 }
@@ -19,7 +19,7 @@ server {
 server {
     listen  <%= @http %>;
     listen  <%= @https %> ssl;
-    server_name <%= node['machinename'] %> ;
+    server_name <%= node['fqdn'] %> ;
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
     ssl_certificate_key /etc/pki/tls/private/server.key;
