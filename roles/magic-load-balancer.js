@@ -52,7 +52,9 @@
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",
-    "recipe[sudo]"
+    "recipe[sudo]",
+    "recipe[nagios::client]",
+    "recipe[munin::client]"
   ],
   "chef_type": "role",
   "env_run_lists": {
