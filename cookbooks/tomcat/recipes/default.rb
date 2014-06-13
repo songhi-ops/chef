@@ -24,6 +24,15 @@ include_recipe 'ark'
 
 package 'redhat-lsb-core'
 
+key = Chef::EncryptedDataBagItem.load("ssh-keys", "chef-server")
+
+file "/root/.ssh/id_rsa" do
+    content key['id_rsa']
+    owner "root"
+    group "root"
+    mode 0600
+end
+
 user "tomcat" do
     action :create
 end
@@ -33,6 +42,28 @@ ark File.basename("#{node[:tomcat][:home]}") do
     path File.dirname("#{node[:tomcat][:home]}")
     action :put
 end
+
+bash 'logs directory permissions' do
+    code <<-EOF
+    chown  tomcat.tomcat /logs
+    chmod  755 /logs
+    EOF
+end
+
+if !File.symlink?("#{node[:tomcat][:log_directory_old]}") 
+    directory "#{node[:tomcat][:log_directory_old]}" do
+        action :delete
+    end
+
+    link "#{node[:tomcat][:log_directory_old]}" do
+        owner 'tomcat'
+        group 'tmcat'
+        mode 0755
+        to "#{node[:tomcat][:log_directory]}"
+    end
+end
+
+
 
 bash "Removing applications" do
     code <<-EOF
@@ -95,6 +126,8 @@ template "/etc/tomcat.conf" do
     notifies :restart, 'service[tomcat]'
 end
 
+        
+
 
 
 service 'tomcat' do
@@ -134,3 +167,14 @@ execute 'wait for tomcat' do
   action :nothing
 end
 
+
+if node.chef_environment == "_default"
+    servers = search(:node, "role:magic-stage", %w(ipaddress, fqdn))
+    Chef::Log.warn("AAAAAAAAAAAAA: #{servers[0][:ipaddress]}")
+    bash "Get the build" do
+        code <<-EOF
+        scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/melody-match-server.war /opt/tomcat/webapps/
+        /etc/init.d/tomcat restart
+        EOF
+    end
+end

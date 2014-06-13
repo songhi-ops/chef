@@ -1,5 +1,3 @@
-
-
 # Instructions:
 # 1. Create an ipython profile
 # 2. Create a file in ~/.ipython/profile_default/startup/00-start.py
@@ -15,6 +13,7 @@ from boto.ec2.blockdevicemapping import BlockDeviceType, BlockDeviceMapping
 import boto.ec2
 import time
 import os
+from copy import deepcopy
 
 regions = boto.ec2.regions()
 us_east_1 = filter(lambda obj: obj.name == 'us-east-1', regions)[0]
@@ -78,7 +77,7 @@ def aws_instance (input_string='no_matter', state='all', supress_output = False)
 
     if not supress_output:
         for i in list:
-            print i.id.rjust(10) , str(i.private_ip_address).rjust(12),  i.state.rjust(8),  i.tags.get('Name', '')
+            print i.id.rjust(10) , str(i.private_ip_address).rjust(12),  i.state.rjust(8), i.placement.ljust(12), i.instance_type.ljust(12), i.tags.get('Name', '').ljust(20)
 
     if len(list) == 1:
         return list[0]
@@ -105,6 +104,7 @@ def aws_eips(connection, supress_output=False):
 type_t1_micro = 't1.micro'
 type_m3_xlarge = 'm3.xlarge'
 type_r3_2xlarge = 'r3.2xlarge'
+type_r3_xlarge = 'r3.xlarge'
 
 """
 Stage_template
@@ -124,7 +124,47 @@ Mongo DB shard template
 """
 
 
-template_mongo_shard_east_1a_paravirtual = {
+template_mongo_shard_east_1a_paravirtual_4000iops = {
+        'image_id' : 'ami-82fd15ea',
+        'key_name' : 'operations',
+        'instance_type' : 'r3.xlarge',
+        'subnet_id' : 'subnet-ab4449ed',
+        'security_group_ids' : ['sg-d6d542b3'],
+        'connection' : conn_east,
+        'region' : 'us-east-1a',
+        }
+
+# mongo_shard_east_1c_paravirtual 
+
+template_mongo_shard_east_1c_paravirtual_4000iops = deepcopy(template_mongo_shard_east_1a_paravirtual_4000iops)
+template_mongo_shard_east_1c_paravirtual_4000iops['subnet_id'] = 'subnet-c0d6f9e8'
+template_mongo_shard_east_1c_paravirtual_4000iops['region'] = 'us-east-1c'
+
+
+# mongo_shard_east_1a_hvm 
+
+template_mongo_shard_east_1a_hvm_4000iops = deepcopy(template_mongo_shard_east_1a_paravirtual_4000iops)
+template_mongo_shard_east_1a_hvm_4000iops['image_id'] =  'ami-8afa12e2'
+template_mongo_shard_east_1a_hvm_4000iops['instance_type'] =  'r3.xlarge'
+
+template_mongo_shard_east_1a_hvm_1500iops = deepcopy(template_mongo_shard_east_1a_hvm_4000iops)
+template_mongo_shard_east_1a_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
+
+# mongo_shard_east_1c_hvm 
+
+template_mongo_shard_east_1c_hvm_4000iops = deepcopy(template_mongo_shard_east_1a_hvm_4000iops)
+template_mongo_shard_east_1c_hvm_4000iops['subnet_id'] = 'subnet-c0d6f9e8'
+template_mongo_shard_east_1c_hvm_4000iops['region'] = 'us-east-1c'
+
+template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_4000iops)
+template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
+
+
+"""
+Mongo Config template
+"""
+
+template_mongo_config_east_1a_paravirtual_4000iops = {
         'image_id' : 'ami-82fd15ea',
         'key_name' : 'operations',
         'instance_type' : 't1.micro',
@@ -134,25 +174,10 @@ template_mongo_shard_east_1a_paravirtual = {
         'region' : 'us-east-1a',
         }
 
-# mongo_shard_east_1c_paravirtual 
 
-template_mongo_shard_east_1c_paravirtual = template_mongo_shard_east_1a_paravirtual 
-template_mongo_shard_east_1c_paravirtual['subnet_id'] = 'subnet-c0d6f9e8'
-template_mongo_shard_east_1c_paravirtual['region'] = 'us-east-1c'
+template_mongo_config_east_1a_paravirtual_1500iops  = deepcopy(template_mongo_config_east_1a_paravirtual_4000iops)
+template_mongo_config_east_1a_paravirtual_1500iops['image_id'] = 'ami-5a17ea32'
 
-
-# mongo_shard_east_1a_hvn 
-
-template_mongo_shard_east_1a_hvn = template_mongo_shard_east_1a_paravirtual 
-template_mongo_shard_east_1a_hvn['image_id'] =  'ami-8afa12e2'
-template_mongo_shard_east_1a_hvn['instance_type'] =  'r3.2xlarge'
-
-
-# mongo_shard_east_1c_hvn 
-
-template_mongo_shard_east_1c_hvn = template_mongo_shard_east_1a_hvn 
-template_mongo_shard_east_1c_hvn['subnet_id'] = 'subnet-c0d6f9e8'
-template_mongo_shard_east_1c_hvn['region'] = 'us-east-1c'
 
 """
 # LB templates
@@ -176,7 +201,7 @@ template_lb_east_1c = {
 interface_1a = boto.ec2.networkinterface.NetworkInterfaceSpecification(subnet_id='subnet-06f3e440',groups=['sg-e1335784'], associate_public_ip_address=True)
 interfaces_1a = boto.ec2.networkinterface.NetworkInterfaceCollection(interface_1a)
 
-template_lb_east_1a = template_lb_east_1c 
+template_lb_east_1a = deepcopy(template_lb_east_1c)
 template_lb_east_1a['interfaces'] = interfaces_1a
 template_lb_east_1a['region'] = 'us-east-1a'
 
@@ -193,7 +218,7 @@ template_application_east_1a = {
         'connection' : conn_east,
         'region' : 'us-east-1a'
         }
-template_application_east_1c = template_application_east_1a
+template_application_east_1c = deepcopy(template_application_east_1a)
 template_application_east_1c['subnet_id'] = 'subnet-c0d6f9e8'
 template_application_east_1c['region'] = 'us-east-1c'
 
@@ -219,8 +244,24 @@ def aws_launch (template, name, instance_type=None, region=None):
         print 'Unkown region'
         return 
 
-    
-    print "run_instances(image_id=" + template['image_id'] + ", key_name=" + template['key_name'] + ", instance_type=" + instance_size + ", placement="+ region + ", subnet_id=" + template['subnet_id'] + ", disable_api_termination=True)"
+    command = "run_instances(image_id=" + template['image_id']
+    command = command + ", key_name=" + template['key_name']
+    command = command + ", instance_type=" + instance_size
+    command = command + ", placement=" + region
+    if not (template['subnet_id'] is None) :
+        command = command + ", subnet_id=" + template['subnet_id']
+
+    command = command + ", disable_api_termination=True"
+    command = command + ", security_group_id=["
+
+    if not (template['security_group_ids'] is None):
+        for sg in template['security_group_ids'] :
+            command = command + ' ' + sg
+    command = command + ']'
+    command = command + ')'
+
+
+    print command    
     r = template['connection'].run_instances(image_id=template['image_id'], key_name=template['key_name'], instance_type=instance_size, placement=region, subnet_id=template['subnet_id'], disable_api_termination=True, security_group_ids=template['security_group_ids'], network_interfaces=template['interfaces'])
     instance = r.instances[0]
     instance.add_tag(key='Name', value=name)
