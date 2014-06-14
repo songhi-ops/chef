@@ -223,7 +223,8 @@ template_application_east_1c['subnet_id'] = 'subnet-c0d6f9e8'
 template_application_east_1c['region'] = 'us-east-1c'
 
 
-def aws_launch (template, name, instance_type=None, region=None):
+def aws_launch (template_original, name, instance_type=None, region=None):
+    template = deepcopy(template_original)
     region = template['region'] if region is None else region
     instance_size = template['instance_type'] if instance_type is None else instance_type
     if not 'interfaces' in template :
