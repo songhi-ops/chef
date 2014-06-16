@@ -1,0 +1,103 @@
+#!/bin/bash
+# Generated with CHEF
+# mongos - Startup script for mongos
+
+# chkconfig: 35 85 15
+# description: Mongo is a scalable, document-oriented database.
+# processname: mongos
+# config: /etc/mongos.conf
+# pidfile: /var/run/mongodb/mongos.pid
+
+. /etc/rc.d/init.d/functions
+
+# things from mongos.conf get there by mongos reading it
+
+
+# NOTE: if you change any OPTIONS here, you get what you pay for:
+# this script assumes all options are in the config file.
+CONFIGFILE="/etc/mongos.conf"
+OPTIONS=" -f $CONFIGFILE"
+SYSCONFIG="/etc/sysconfig/mongos"
+
+# FIXME: 1.9.x has a --shutdown flag that parses the config file and
+# shuts down the correct running pid, but that's unavailable in 1.8
+# for now.  This can go away when this script stops supporting 1.8.
+PIDFILE=`awk -F= '/^pidfilepath[[:blank:]]*=[[:blank:]]*/{print $2}' "$CONFIGFILE"`
+mongos=${MONGOS-/usr/bin/mongos}
+
+MONGO_USER=mongod
+MONGO_GROUP=mongod
+
+if [ -f "$SYSCONFIG" ]; then
+    . "$SYSCONFIG"
+fi
+
+# Handle NUMA access to CPUs (SERVER-3574)
+# This verifies the existence of numactl as well as testing that the command works
+NUMACTL_ARGS="--interleave=all"
+if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+then
+    NUMACTL="numactl $NUMACTL_ARGS"
+else
+    NUMACTL=""
+fi
+
+start()
+{
+  # Recommended ulimit values for mongod or mongos
+  # See http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+  #
+  ulimit -f unlimited
+  ulimit -t unlimited
+  ulimit -v unlimited
+  ulimit -n 64000
+  ulimit -m unlimited
+  ulimit -u 32000
+
+  echo -n $"Starting mongos: "
+  daemon --user "$MONGO_USER" "$NUMACTL $mongos $OPTIONS >/dev/null 2>&1"
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && touch /var/lock/subsys/mongos
+}
+
+stop()
+{
+  echo -n $"Stopping mongos: "
+  killproc -p "$PIDFILE" -d 300 /usr/bin/mongos
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/mongos
+}
+
+restart () {
+	stop
+	start
+}
+
+
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  condrestart)
+    [ -f /var/lock/subsys/mongos ] && restart || :
+    ;;
+  status)
+    status $mongos
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+    RETVAL=1
+esac
+
+exit $RETVAL

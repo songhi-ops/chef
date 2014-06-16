@@ -76,7 +76,8 @@ role.each do |role,file|
         
 
         # Create /etc/init.d/mongo
-        unless role == 'mongos'
+        if role != 'mongos'
+
             template init_file do
               cookbook node['mongodb']['template_cookbook']
               source node['mongodb']['init_script_template']
@@ -91,6 +92,15 @@ role.each do |role,file|
               )
               action :create_if_missing
             end
+        else
+            cookbook_file init_file do
+                owner 'root'
+                group 'root'
+                mode mode
+                source 'mongos'
+                action :create_if_missing
+            end
+
         end
 
         # Create /etc/mongo

@@ -14,7 +14,7 @@
     },
     "ulimit": {
       "users": {
-        "mongo": {
+        "mongod": {
           "filehandle_limit": 65000
         }
       }

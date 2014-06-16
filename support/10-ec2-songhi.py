@@ -124,7 +124,7 @@ Mongo DB shard template
 """
 
 
-template_mongo_shard_east_1a_paravirtual_4000iops = {
+template_mongo_shard_east_1a_paravirtual_3500iops = {
         'image_id' : 'ami-82fd15ea',
         'key_name' : 'operations',
         'instance_type' : 'r3.xlarge',
@@ -136,27 +136,27 @@ template_mongo_shard_east_1a_paravirtual_4000iops = {
 
 # mongo_shard_east_1c_paravirtual 
 
-template_mongo_shard_east_1c_paravirtual_4000iops = deepcopy(template_mongo_shard_east_1a_paravirtual_4000iops)
-template_mongo_shard_east_1c_paravirtual_4000iops['subnet_id'] = 'subnet-c0d6f9e8'
-template_mongo_shard_east_1c_paravirtual_4000iops['region'] = 'us-east-1c'
+template_mongo_shard_east_1c_paravirtual_3500iops = deepcopy(template_mongo_shard_east_1a_paravirtual_3500iops)
+template_mongo_shard_east_1c_paravirtual_3500iops['subnet_id'] = 'subnet-c0d6f9e8'
+template_mongo_shard_east_1c_paravirtual_3500iops['region'] = 'us-east-1c'
 
 
 # mongo_shard_east_1a_hvm 
 
-template_mongo_shard_east_1a_hvm_4000iops = deepcopy(template_mongo_shard_east_1a_paravirtual_4000iops)
-template_mongo_shard_east_1a_hvm_4000iops['image_id'] =  'ami-8afa12e2'
-template_mongo_shard_east_1a_hvm_4000iops['instance_type'] =  'r3.xlarge'
+template_mongo_shard_east_1a_hvm_3500iops = deepcopy(template_mongo_shard_east_1a_paravirtual_3500iops)
+template_mongo_shard_east_1a_hvm_3500iops['image_id'] =  'ami-8afa12e2'
+template_mongo_shard_east_1a_hvm_3500iops['instance_type'] =  'r3.xlarge'
 
-template_mongo_shard_east_1a_hvm_1500iops = deepcopy(template_mongo_shard_east_1a_hvm_4000iops)
+template_mongo_shard_east_1a_hvm_1500iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
 template_mongo_shard_east_1a_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
 
 # mongo_shard_east_1c_hvm 
 
-template_mongo_shard_east_1c_hvm_4000iops = deepcopy(template_mongo_shard_east_1a_hvm_4000iops)
-template_mongo_shard_east_1c_hvm_4000iops['subnet_id'] = 'subnet-c0d6f9e8'
-template_mongo_shard_east_1c_hvm_4000iops['region'] = 'us-east-1c'
+template_mongo_shard_east_1c_hvm_3500iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
+template_mongo_shard_east_1c_hvm_3500iops['subnet_id'] = 'subnet-c0d6f9e8'
+template_mongo_shard_east_1c_hvm_3500iops['region'] = 'us-east-1c'
 
-template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_4000iops)
+template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
 template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
 
 
@@ -164,7 +164,7 @@ template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
 Mongo Config template
 """
 
-template_mongo_config_east_1a_paravirtual_4000iops = {
+template_mongo_config_east_1a_paravirtual_3500iops = {
         'image_id' : 'ami-82fd15ea',
         'key_name' : 'operations',
         'instance_type' : 't1.micro',
@@ -175,7 +175,7 @@ template_mongo_config_east_1a_paravirtual_4000iops = {
         }
 
 
-template_mongo_config_east_1a_paravirtual_1500iops  = deepcopy(template_mongo_config_east_1a_paravirtual_4000iops)
+template_mongo_config_east_1a_paravirtual_1500iops  = deepcopy(template_mongo_config_east_1a_paravirtual_3500iops)
 template_mongo_config_east_1a_paravirtual_1500iops['image_id'] = 'ami-5a17ea32'
 
 

@@ -24,13 +24,15 @@ include_recipe 'ark'
 
 package 'redhat-lsb-core'
 
-key = Chef::EncryptedDataBagItem.load("ssh-keys", "chef-server")
-
-file "/root/.ssh/id_rsa" do
-    content key['id_rsa']
-    owner "root"
-    group "root"
-    mode 0600
+if node.chef_environment == '_default'
+    key = Chef::EncryptedDataBagItem.load("ssh-keys", "chef-server")
+    
+    file "/root/.ssh/id_rsa" do
+        content key['id_rsa']
+        owner "root"
+        group "root"
+        mode 0600
+    end
 end
 
 user "tomcat" do
@@ -43,10 +45,25 @@ ark File.basename("#{node[:tomcat][:home]}") do
     action :put
 end
 
+directory "/logs/tomcat" do
+  owner "tomcat"
+  group "tomcat"
+  mode 00744
+  action :create
+end
+
+
+directory "#{node[:tomcat][:log_directory]}/melody-match" do
+  owner "tomcat"
+  group "tomcat"
+  mode 00644
+  action :create
+end
+
 bash 'logs directory permissions' do
     code <<-EOF
     chown  tomcat.tomcat /logs
-    chmod  755 /logs
+    chmod  -R 755 /logs
     EOF
 end
 
@@ -59,10 +76,16 @@ if !File.symlink?("#{node[:tomcat][:log_directory_old]}")
         owner 'tomcat'
         group 'tmcat'
         mode 0755
-        to "#{node[:tomcat][:log_directory]}"
+        to "#{node[:tomcat][:log_directory]}/tomcat"
     end
 end
 
+link "/var/log/melody-match" do
+    owner 'tomcat'
+    group 'tomcat'
+    mode 0755
+    to "#{node[:tomcat][:log_directory]}/melody-match"
+end
 
 
 bash "Removing applications" do
@@ -170,11 +193,28 @@ end
 
 if node.chef_environment == "_default"
     servers = search(:node, "role:magic-stage", %w(ipaddress, fqdn))
-    Chef::Log.warn("AAAAAAAAAAAAA: #{servers[0][:ipaddress]}")
     bash "Get the build" do
         code <<-EOF
         scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/melody-match-server.war /opt/tomcat/webapps/
         /etc/init.d/tomcat restart
         EOF
     end
+end
+
+case node.chef_environment
+when '_dev'
+    environment = 'dev'
+when '_default'
+    environment = 'prod'
+when '_stage'
+    environment = 'stage'
+end
+
+
+template "/usr/bin/songhi-env" do
+    source "songhi-env.erb"
+    mode 0766
+    variables ({
+    :env => environment
+    })
 end
