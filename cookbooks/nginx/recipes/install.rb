@@ -24,14 +24,22 @@ template "/etc/nginx/conf.d/default.conf" do
       :http => node["nginx"]["http_port"],
       :https => node["nginx"]["https_port"]
   )
+  notifies :reload, 'service[nginx]'
 end
 
 template "/etc/nginx/nginx.conf" do
   source "nginx.conf.erb"
   mode 0644
+  notifies :reload, 'service[nginx]'
 end
 
-
+cookbook_file "/etc/nginx/conf.d/monitoring.conf" do
+    source "monitoring.conf"
+    owner "root"
+    group "root"
+    mode 0644
+    notifies :reload, 'service[nginx]'
+end
 
 
 cert = Chef::EncryptedDataBagItem.load("certificates", "#{node[:nginx][:certificate]}")
@@ -55,7 +63,7 @@ include_recipe 'hosts'
 
 service 'nginx' do
   service_name "nginx"
-  supports :restart => true, :status => true
+  supports :restart => true, :status => true, :reload => true
   action [:start, :enable]
   retries 4
   retry_delay 30

@@ -19,7 +19,7 @@ server {
 server {
     listen  <%= @http %>;
     listen  <%= @https %> ssl;
-    server_name <%= node['fqdn'] %> ;
+    server_name _;
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
     ssl_certificate_key /etc/pki/tls/private/server.key;

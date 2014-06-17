@@ -31,6 +31,9 @@
             "700-nagios": {
               "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
             },
+            "800-nginx-monitoring": {
+              "rule": "--protocol tcp --dport 8090 --match state --state NEW -s localhost --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }

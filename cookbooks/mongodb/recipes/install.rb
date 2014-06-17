@@ -276,7 +276,7 @@ if node['mongodb']["mongos"]
         egrep 'mongos -f /etc/mongos.conf' /etc/rc.local
         if [ "$?" == "1" ]
         then
-            echo 'mongos -f /etc/mongos.conf' >  /etc/rc.local
+            echo '# mongos -f /etc/mongos.conf' >  /etc/rc.local
         fi
         EOF
     end
