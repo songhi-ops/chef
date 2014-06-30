@@ -213,7 +213,7 @@ end
 
 template "/usr/bin/songhi-env" do
     source "songhi-env.erb"
-    mode 0766
+    mode 0755
     variables ({
     :env => environment
     })

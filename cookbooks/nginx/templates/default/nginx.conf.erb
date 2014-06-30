@@ -1,7 +1,7 @@
 
 user  nginx;
 worker_processes  5;
-worker_rlimit_nofile 32768;
+worker_rlimit_nofile 65000;
 
 
 error_log  /var/log/nginx/error.log;
@@ -10,7 +10,7 @@ pid        /var/run/nginx.pid;
 
 events {
     use epoll;
-    worker_connections  1024;
+    worker_connections  65000;
 }
 
 

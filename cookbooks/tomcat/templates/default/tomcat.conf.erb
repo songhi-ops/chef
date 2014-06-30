@@ -23,8 +23,7 @@ CATALINA_TMPDIR="<%= @tomcat_home %>"
 
 # Use JAVA_OPTS to set java.library.path for libtcnative.so
 #JAVA_OPTS="-Djava.library.path=/usr/lib"
-JAVA_OPTS="${JAVA_OPTS} -Djavax.sql.DataSource.Factory=org.apache.commons.dbcp.BasicDataSourceFactory"
-
+JAVA_OPTS="-Djava.library.path=/usr/lib64 -server -Xms14000m -Xmx14000m -XX:MaxPermSize=256m -XX:MaxDirectMemorySize=2048m -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:-OmitStackTraceInFastThrow -Xloggc:/var/log/tomcat6/catalina.`date +%Y-%m-%d`.gc -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true -Dsun.rmi.dgc.server.gcInterval=1800000 -Dsun.rmi.dgc.client.gcInterval=1800000"
 # What user should run tomcat
 TOMCAT_USER="tomcat"
 
