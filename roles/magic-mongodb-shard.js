@@ -16,7 +16,7 @@
       "users": {
         "mongod": {
           "filehandle_limit": 65000,
-          "process_limit": 'unlimited'
+          "process_limit": "unlimited"
         }
       }
     },
