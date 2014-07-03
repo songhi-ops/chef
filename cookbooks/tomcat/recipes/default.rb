@@ -95,7 +95,7 @@ bash "Removing applications" do
 end
 
 #Setting UMASK :
-cookbook_file "#{node[:tomcat][:home]}/bin/catalina.sh" do
+template "#{node[:tomcat][:home]}/bin/catalina.sh" do
     owner 'tomcat'
     group 'tomcat'
     source 'catalina.sh'
@@ -117,6 +117,17 @@ end
 
 link "/usr/sbin/tomcat_stop" do
     to "#{node[:tomcat][:home]}/bin/shutdown.sh"
+end
+
+#New relic
+cookbook_file "/root/newrelic_agent3.7.2.zip" do
+    source 'newrelic_agent3.7.2.zip'
+end
+
+bash 'unpacking newrelic' do
+    cod <<-EOF
+    unzip /root/newrelic_agent3.7.2.zip -d #{node[:tomcat][:home]/
+    EOF
 end
 
 bash "Permissions for /opt/apache... " do

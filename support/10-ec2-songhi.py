@@ -7,7 +7,7 @@
 #       AWS_SECRET_KEY: 'your access secret key'
 #    }
 # 3. symlink this file to the path: ~/.ipython/profile_default/startup/10-start.py
-
+from __future__ import division
 from boto.ec2.connection import EC2Connection
 from boto.ec2.blockdevicemapping import BlockDeviceType, BlockDeviceMapping
 import boto.ec2
