@@ -233,6 +233,13 @@ fi
 # org.apache.catalina.security.SecurityListener
 JAVA_OPTS="$JAVA_OPTS -Dorg.apache.catalina.security.SecurityListener.UMASK=0007"
 
+# ---- New Relic switch automatically added to start command on 2014 Jun 16, 08:40:17
+NR_JAR=<%= node[:tomcat][:home] %>/newrelic/newrelic.jar; export NR_JAR
+JAVA_OPTS="$JAVA_OPTS -javaagent:$NR_JAR"; export JAVA_OPTS
+
+
+
+
 # ----- Execute The Requested Command -----------------------------------------
 
 # Bugzilla 37848: only output this if we have a TTY

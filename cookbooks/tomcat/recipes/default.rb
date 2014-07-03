@@ -39,11 +39,17 @@ user "tomcat" do
     action :create
 end
 
-ark File.basename("#{node[:tomcat][:home]}") do
-    url node['tomcat']['tarball'] 
-    path File.dirname("#{node[:tomcat][:home]}")
-    action :put
+if not File.directory? "#{node[:tomcat][:home]}"
+    ark File.basename("#{node[:tomcat][:home]}") do
+        url node['tomcat']['tarball'] 
+        path File.dirname("#{node[:tomcat][:home]}")
+        action :put
+    end
+
+
 end
+
+
 
 directory "/logs/tomcat" do
   owner "tomcat"
@@ -88,24 +94,13 @@ link "/var/log/melody-match" do
 end
 
 
-bash "Removing applications" do
+bash "Removing applications, catalina.sh and server.xml" do
     code <<-EOF
     rm -rf #{node[:tomcat][:home]}/webapps/*
     EOF
 end
 
-#Setting UMASK :
-template "#{node[:tomcat][:home]}/bin/catalina.sh" do
-    owner 'tomcat'
-    group 'tomcat'
-    source 'catalina.sh'
-end
 
-cookbook_file "#{node[:tomcat][:home]}/conf/server.xml" do
-    owner 'tomcat'
-    group 'tomcat'
-    source 'server.xml'
-end
 
 link "#{node[:tomcat][:symlink]}" do
     to "#{node[:tomcat][:home]}"
@@ -120,13 +115,13 @@ link "/usr/sbin/tomcat_stop" do
 end
 
 #New relic
-cookbook_file "/root/newrelic_agent3.7.2.zip" do
-    source 'newrelic_agent3.7.2.zip'
+cookbook_file "/root/newrelic_agent3.7.2.tar.gz" do
+    source 'newrelic_agent3.7.2.tar.gz'
 end
 
 bash 'unpacking newrelic' do
-    cod <<-EOF
-    tari xzvf /root/newrelic_agent3.7.2.zip -C #{node[:tomcat][:home]}
+    code <<-EOF
+    tar xzvf /root/newrelic_agent3.7.2.tar.gz -C #{node[:tomcat][:home]}
     EOF
 end
 
@@ -161,6 +156,19 @@ template "/etc/tomcat.conf" do
 end
 
         
+cookbook_file "#{node[:tomcat][:home]}/conf/server.xml" do
+    owner 'tomcat'
+    group 'tomcat'
+    source 'server.xml'
+    notifies :restart, 'service[tomcat]'
+end
+
+template "#{node[:tomcat][:home]}/bin/catalina.sh" do
+    owner 'tomcat'
+    group 'tomcat'
+    source 'catalina.sh.erb'
+    notifies :restart, 'service[tomcat]'
+end
 
 
 
