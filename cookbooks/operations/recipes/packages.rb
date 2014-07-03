@@ -22,3 +22,7 @@ end
 package 'screen' do
   action :install
 end
+
+package 'mlocate' do
+  action :install
+end
