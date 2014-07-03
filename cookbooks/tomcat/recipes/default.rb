@@ -126,7 +126,7 @@ end
 
 bash 'unpacking newrelic' do
     cod <<-EOF
-    unzip /root/newrelic_agent3.7.2.zip -d #{node[:tomcat][:home]/
+    tari xzvf /root/newrelic_agent3.7.2.zip -C #{node[:tomcat][:home]}
     EOF
 end
 
