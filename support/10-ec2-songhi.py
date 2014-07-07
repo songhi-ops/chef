@@ -105,6 +105,7 @@ type_t1_micro = 't1.micro'
 type_m3_xlarge = 'm3.xlarge'
 type_r3_2xlarge = 'r3.2xlarge'
 type_r3_xlarge = 'r3.xlarge'
+type_c3_xlarge = 'c3.xlarge'
 
 """
 Stage_template
