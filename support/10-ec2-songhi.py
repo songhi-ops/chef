@@ -77,7 +77,7 @@ def aws_instance (input_string='no_matter', state='all', supress_output = False)
 
     if not supress_output:
         for i in list:
-            print i.id.rjust(10) , str(i.private_ip_address).rjust(12),  i.state.rjust(8), i.placement.ljust(12), i.instance_type.ljust(12), i.tags.get('Name', '').ljust(20)
+            print i.id.rjust(10) , str(i.private_ip_address).ljust(12), str(i.ip_address).ljust(12),  i.state.rjust(8), i.placement.ljust(12), i.instance_type.ljust(12), i.tags.get('Name', '').ljust(20)
 
     if len(list) == 1:
         return list[0]
