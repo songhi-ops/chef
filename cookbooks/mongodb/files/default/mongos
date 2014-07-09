@@ -16,7 +16,7 @@
 # NOTE: if you change any OPTIONS here, you get what you pay for:
 # this script assumes all options are in the config file.
 CONFIGFILE="/etc/mongos.conf"
-OPTIONS=" -f $CONFIGFILE"
+OPTIONS=" --setParameter releaseConnectionsAfterResponse=true -f $CONFIGFILE"
 SYSCONFIG="/etc/sysconfig/mongos"
 
 # FIXME: 1.9.x has a --shutdown flag that parses the config file and
@@ -52,7 +52,7 @@ start()
   ulimit -v unlimited
   ulimit -n 64000
   ulimit -m unlimited
-  ulimit -u 32000
+  #ulimit -u 32000
 
   echo -n $"Starting mongos: "
   daemon --user "$MONGO_USER" "$NUMACTL $mongos $OPTIONS >/dev/null 2>&1"
