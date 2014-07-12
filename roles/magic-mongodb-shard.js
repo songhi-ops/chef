@@ -9,7 +9,6 @@
       "configsrv": true,
       "standalone": false,
       "shard": true,
-      "mongos": true,
       "replica": true
     },
     "ulimit": {
@@ -36,22 +35,19 @@
             "300-mongo-config": {
               "rule": "--protocol tcp --dport 27019 --match state --state NEW --jump ACCEPT"
             },
-            "400-mongos": {
-              "rule": "--protocol tcp --dport 27017 --match state --state NEW --jump ACCEPT"
-            },
-            "500-ping": {
+            "400-ping": {
               "rule": "--protocol icmp --jump ACCEPT"
             },
-            "600-ntp": {
+            "500-ntp": {
               "rule": "--protocol udp --dport 123 --jump ACCEPT"
             },
-            "700-munin": {
+            "600-munin": {
               "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
             },
-            "800-nagios": {
+            "700-nagios": {
               "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
             },
-            "900-mongo-monitoring": {
+            "800-mongo-monitoring": {
               "rule": "--protocol tcp --dport 28018 --match state --state NEW --jump ACCEPT"
             },
             "default": "DROP [0:0]"

@@ -5,8 +5,16 @@
   "override_attributes": {
   },
   "default_attributes": {
+    "mongodb": {
+      "standalone": false,
+      "mongos": true
+    },
     "ulimit": {
       "users": {
+        "mongod": {
+          "filehandle_limit": 65000,
+          "process_limit": "unlimited"
+        },
         "tomcat": {
           "filehandle_limit": 65000,
           "process_limit": 65000
@@ -29,7 +37,10 @@
             "300-tomcat-shutdown": {
               "rule": "--protocol tcp --dport 9626 --match state --state NEW -s localhost --jump ACCEPT"
             },
-            "400-munin": {
+            "400-mongos": {
+              "rule": "--protocol tcp --dport 27017 --match state --state NEW --jump ACCEPT"
+            },
+            "500-munin": {
               "rule": "--protocol tcp --dport 4949 --match state --state NEW --jump ACCEPT"
             },
             "500-nagios": {
@@ -57,6 +68,7 @@
     "recipe[operations]",
     "recipe[ulimit]",
     "recipe[tomcat]",
+    "recipe[mongodb]",
     "recipe[iptables-ng]",
     "recipe[users::developers]",
     "recipe[users::sysadmins]",

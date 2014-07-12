@@ -1,4 +1,5 @@
 #
+#
 # Cookbook Name:: mongodb:install
 # Recipe:: install
 #
@@ -10,14 +11,14 @@
 # install the 10gen repo if necessary
 include_recipe 'mongodb::10gen_repo' if node['mongodb']['install_method'] == '10gen'
 
-role = [
+roles = [
     ["mongos", "mongos"],
     ["replica", "mongod"],
     ["configsrv", "mongo-config"],
     ["standalone", "mongod"]
 ]
 
-role.each do |role,file|
+roles.each do |role,file|
 
     if node['mongodb']["#{role}"]
 
@@ -45,6 +46,7 @@ role.each do |role,file|
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
+            node.override['mongodb']['package_name'] = 'mongodb-org-mongos'
         when  'configsrv'
             node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-config.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
@@ -202,6 +204,14 @@ role.each do |role,file|
                 action :create
             end
         end
+
+        Chef::Log.info ("HERE!!! : #{role}")
+        if role == 'mongos'
+            Chef::Log.info ("doing it !!!")
+            user "mongod" do
+                action :create
+            end
+        end
     end
 end
 
@@ -230,11 +240,12 @@ bash "Download package" do
     ls /data/packages
     if [ "$?" != "0" ]
     then
-        mkdir /data/packages
+        mkdir -R /data/packages
         yumdownloader --resolve --destdir /data/packages #{node[:mongodb][:package_name]} 
     fi
     EOF
 end
+
 
 # Install
 package node[:mongodb][:package_name] do
@@ -243,7 +254,9 @@ package node[:mongodb][:package_name] do
   version node[:mongodb][:package_version]
 end
 
-#mongod user doesnt exists at the moment of creating the directories
+# mongod user doesnt exists at the moment of creating the directories
+
+
 bash 'change ownership directories' do
         user "root"
         code <<-EOH
@@ -253,8 +266,8 @@ end
 
 #Enable services:
 #
-role.each do |role,file|
-    if node['mongodb']["#{role}"] and role != 'mongos'
+roles.each do |role,file|
+    if node['mongodb']["#{role}"]
         ## init_file = /etc/init.d/mongo-something
         if node['mongodb']['apt_repo'] == 'ubuntu-upstart'
           init_file = File.join(node['mongodb']['init_dir'], "#{file}.conf")
@@ -270,17 +283,6 @@ role.each do |role,file|
     end
 end
 
-if node['mongodb']["mongos"]
-    bash 'add mongos rc.local' do
-        code <<-EOF
-        egrep 'mongos -f /etc/mongos.conf' /etc/rc.local
-        if [ "$?" == "1" ]
-        then
-            echo '# mongos -f /etc/mongos.conf' >  /etc/rc.local
-        fi
-        EOF
-    end
-end
 
 
 bash 'stop iptables and disable selinux' do
