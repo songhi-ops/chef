@@ -11,6 +11,7 @@
 # install the 10gen repo if necessary
 include_recipe 'mongodb::10gen_repo' if node['mongodb']['install_method'] == '10gen'
 
+
 roles = [
     ["mongos", "mongos"],
     ["replica", "mongod"],
@@ -46,7 +47,7 @@ roles.each do |role,file|
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
-            node.override['mongodb']['package_name'] = 'mongodb-org-mongos'
+            node.override['mongodb']['package_name'] = ['mongodb-org-mongos', 'mongodb-org-shell']
         when  'configsrv'
             node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-config.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
@@ -186,8 +187,8 @@ roles.each do |role,file|
         end
 
         
-        if node['mongodb']['shard']
-            #Chef::Log.info("AQUI: #{node['mongodb']['shard']}")
+        #Chef::Log.warn("AQUI: #{node['mongodb']['mongos']}")
+        if node['mongodb']['mongos']
             shard="#{node['mongodb']['replica_string']}".split(",").first
             name="#{node['mongodb']['replica_string']}".split("/").first
             #name=shard.split("/").first
@@ -205,10 +206,16 @@ roles.each do |role,file|
             end
         end
 
-        Chef::Log.info ("HERE!!! : #{role}")
+
+        Chef::Log.warn("AQUI: #{role}")
         if role == 'mongos'
-            Chef::Log.info ("doing it !!!")
             user "mongod" do
+                action :create
+            end
+
+            directory "/var/run/mongodb" do
+                owner "mongod"
+                group "mongod"
                 action :create
             end
         end
@@ -235,23 +242,29 @@ package "yum-utils" do
 end
 
 
-bash "Download package" do
-    code <<-EOF
-    ls /data/packages
-    if [ "$?" != "0" ]
-    then
-        mkdir -R /data/packages
-        yumdownloader --resolve --destdir /data/packages #{node[:mongodb][:package_name]} 
-    fi
-    EOF
+for package_name in node[:mongodb][:package_name] do
+    bash "Download package" do
+        code <<-EOF
+        ls /data/packages
+        if [ "$?" != "0" ]
+        then
+            mkdir -R /data/packages
+            yumdownloader --resolve --destdir /data/packages #{package_name} 
+        fi
+        EOF
+    end
 end
 
 
 # Install
-package node[:mongodb][:package_name] do
-  options packager_opts
-  action :install
-  version node[:mongodb][:package_version]
+
+
+for package_name in node[:mongodb][:package_name] do
+    package package_name do
+      options packager_opts
+      action :install
+      version node[:mongodb][:package_version]
+    end
 end
 
 # mongod user doesnt exists at the moment of creating the directories
@@ -282,6 +295,7 @@ roles.each do |role,file|
         end
     end
 end
+
 
 
 

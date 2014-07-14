@@ -32,7 +32,7 @@ when 'rhel', 'fedora'
   # from http://rpm.pbone.net/index.php3?stat=3&limit=1&srodzaj=3&dl=40&search=mongodb
   # verified for RHEL5,6 Fedora 18,19
   default[:mongodb][:init_dir] = '/etc/init.d'
-  default[:mongodb][:package_name] = 'mongodb-org'
+  default[:mongodb][:package_name] = ['mongodb-org']
   default[:mongodb][:user] = 'mongod'
   default[:mongodb][:group] = 'mongod'
   default[:mongodb][:init_script_template] = 'redhat-mongodb.init.erb'
@@ -41,11 +41,11 @@ when 'rhel', 'fedora'
   if node['platform'] == 'centos' || node['platform'] == 'amazon'
     Chef::Log.warn("CentOS doesn't provide mongodb, forcing use of 10gen repo")
     default[:mongodb][:install_method] = '10gen'
-    default[:mongodb][:package_name] = 'mongodb-org'
-    Chef::Log.info("Installing: #{node['mongodb']['package_name']}")
+    default[:mongodb][:package_name] = ['mongodb-org']
+    #Chef::Log.info("Installing: #{node['mongodb']['package_name']}")
   end
 when 'debian'
-  default[:mongodb][:package_name] = 'mongodb'
+  default[:mongodb][:package_name] = ['mongodb']
   default[:mongodb][:template_cookbook] = 'mongodb'
   default[:mongodb][:instance_name] = 'mongodb'
   if node['platform'] == 'ubuntu'
