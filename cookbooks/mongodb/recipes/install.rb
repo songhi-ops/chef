@@ -104,6 +104,10 @@ roles.each do |role,file|
                 action :create_if_missing
             end
 
+            directory "/data" do
+                action :create
+            end
+
         end
 
         # Create /etc/mongo
