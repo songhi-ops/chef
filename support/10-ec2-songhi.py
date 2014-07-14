@@ -118,6 +118,7 @@ template_stage_template = {
         'security_group_ids' : ['sg-5935bd3c'],
         'connection' : conn_east,
         'region' : 'us-east-1c',
+        'ebs_optimized' : 'False'
         }
 
 """
@@ -126,13 +127,14 @@ Mongo DB shard template
 
 
 template_mongo_shard_east_1a_paravirtual_3500iops = {
-        'image_id' : 'ami-82fd15ea',
+        'image_id' : 'ami-4e804d26',
         'key_name' : 'operations',
         'instance_type' : 'r3.xlarge',
         'subnet_id' : 'subnet-ab4449ed',
         'security_group_ids' : ['sg-d6d542b3'],
         'connection' : conn_east,
         'region' : 'us-east-1a',
+        'ebs_optimized' : 'True'
         }
 
 # mongo_shard_east_1c_paravirtual 
@@ -173,6 +175,7 @@ template_mongo_config_east_1a_paravirtual_3500iops = {
         'security_group_ids' : ['sg-d6d542b3'],
         'connection' : conn_east,
         'region' : 'us-east-1a',
+        'ebs_optimized' : 'False'
         }
 
 
@@ -196,7 +199,8 @@ template_lb_east_1c = {
         'security_group_ids' : ['sg-e1335784'],
         'connection' : conn_east,
         'region' : 'us-east-1c',
-        'interfaces' : interfaces_1c
+        'interfaces' : interfaces_1c,
+        'ebs_optimized' : 'False'
         }
 
 interface_1a = boto.ec2.networkinterface.NetworkInterfaceSpecification(subnet_id='subnet-06f3e440',groups=['sg-e1335784'], associate_public_ip_address=True)
@@ -213,11 +217,12 @@ Applications
 template_application_east_1a = {
         'image_id' : 'ami-c2c93baa',
         'key_name' : 'operations',
-        'instance_type' : 'c3.2xlarge',
+        'instance_type' : 'c3.xlarge',
         'subnet_id' : 'subnet-ab4449ed',
         'security_group_ids' : ['sg-74016511'],
         'connection' : conn_east,
-        'region' : 'us-east-1a'
+        'region' : 'us-east-1a',
+        'ebs_optimized' : 'False'
         }
 template_application_east_1c = deepcopy(template_application_east_1a)
 template_application_east_1c['subnet_id'] = 'subnet-c0d6f9e8'
@@ -260,6 +265,7 @@ def aws_launch (template_original, name, instance_type=None, region=None):
         for sg in template['security_group_ids'] :
             command = command + ' ' + sg
     command = command + ']'
+    command = command + ', ebs_optimized=' + template['ebs_optimized']
     command = command + ')'
 
 
