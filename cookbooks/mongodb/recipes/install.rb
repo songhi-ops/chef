@@ -315,3 +315,19 @@ package "xfsprogs" do
   action :install
 end
 
+remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
+    source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+    action :create
+end
+
+rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
+    source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+    action :install
+end
+
+
+bash 'chkconfig' do
+    code <<-EOF
+    chkconfig mongodb-mms-monitoring-agent on
+    EOF
+end

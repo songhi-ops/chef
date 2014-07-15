@@ -127,7 +127,7 @@ Mongo DB shard template
 
 
 template_mongo_shard_east_1a_paravirtual_3500iops = {
-        'image_id' : 'ami-4e804d26',
+        'image_id' : 'ami-82fd15ea',
         'key_name' : 'operations',
         'instance_type' : 'r3.xlarge',
         'subnet_id' : 'subnet-ab4449ed',
@@ -150,6 +150,10 @@ template_mongo_shard_east_1a_hvm_3500iops = deepcopy(template_mongo_shard_east_1
 template_mongo_shard_east_1a_hvm_3500iops['image_id'] =  'ami-8afa12e2'
 template_mongo_shard_east_1a_hvm_3500iops['instance_type'] =  'r3.xlarge'
 
+template_mongo_shard_east_1a_hvm_750iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
+template_mongo_shard_east_1a_hvm_750iops['image_id'] = 'ami-4e804d26' 
+
+
 template_mongo_shard_east_1a_hvm_1500iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
 template_mongo_shard_east_1a_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
 
@@ -158,6 +162,10 @@ template_mongo_shard_east_1a_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
 template_mongo_shard_east_1c_hvm_3500iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
 template_mongo_shard_east_1c_hvm_3500iops['subnet_id'] = 'subnet-c0d6f9e8'
 template_mongo_shard_east_1c_hvm_3500iops['region'] = 'us-east-1c'
+
+
+template_mongo_shard_east_1c_hvm_750iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
+template_mongo_shard_east_1a_hvm_750iops['image_id'] = 'ami-4e804d26' 
 
 template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
 template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
@@ -182,6 +190,9 @@ template_mongo_config_east_1a_paravirtual_3500iops = {
 template_mongo_config_east_1a_paravirtual_1500iops  = deepcopy(template_mongo_config_east_1a_paravirtual_3500iops)
 template_mongo_config_east_1a_paravirtual_1500iops['image_id'] = 'ami-5a17ea32'
 
+
+template_mongo_config_east_1a_paravirtual_no_iops  = deepcopy(template_mongo_config_east_1a_paravirtual_3500iops)
+template_mongo_config_east_1a_paravirtual_no_iops['image_id'] = 'ami-2c9b5644'
 
 """
 # LB templates
