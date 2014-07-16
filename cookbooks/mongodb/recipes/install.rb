@@ -40,6 +40,7 @@ roles.each do |role,file|
         # Specific config settings according to role
         case role
         when  'mongos'
+
             node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongos.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongos.pid'
             node.override['mongodb']['config']['dbpath'] = nil
@@ -48,6 +49,8 @@ roles.each do |role,file|
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
             node.override['mongodb']['package_name'] = ['mongodb-org-mongos', 'mongodb-org-shell']
+            node.override['mongodb']['config']['rest'] = nil
+            node.override['mongodb']['config']['httpinterface'] = nil
         when  'configsrv'
             node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-config.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
@@ -78,6 +81,7 @@ roles.each do |role,file|
         
         
 
+        #Chef::Log.warn ("AAAAAAAAAAAAAAA: #{node['mongodb']['config']['httpinterface']}")
         # Create /etc/init.d/mongo
         if role != 'mongos'
 
@@ -113,7 +117,7 @@ roles.each do |role,file|
         # Create /etc/mongo
 
 
-        #Chef::Log.info ("#{role}: #{node['mongodb']['config']['dbpath']}")
+        #Chef::Log.warn ("AAAAA#{role}: #{node['mongodb']['config']['httpinterface']}")
         template config_physical_file do
           cookbook node['mongodb']['template_cookbook']
           source node['mongodb']['config_template']
@@ -211,7 +215,7 @@ roles.each do |role,file|
         end
 
 
-        Chef::Log.warn("AQUI: #{role}")
+        #Chef::Log.warn("AQUI: #{role}")
         if role == 'mongos'
             user "mongod" do
                 action :create

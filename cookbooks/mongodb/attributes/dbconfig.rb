@@ -27,6 +27,8 @@ default['mongodb']['config']['replSet'] = nil
 default['mongodb']['config']['shardsvr'] = nil
 default['mongodb']['config']['configsvr'] = nil
 default['mongodb']['config']['configdb'] = nil
+default['mongodb']['config']['rest'] = 'true'
+default['mongodb']['config']['httpinterface'] = 'true'
 
 
 

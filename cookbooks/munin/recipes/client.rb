@@ -41,3 +41,25 @@ service 'munin-node' do
 end
 
 
+if node.run_list.roles.include?('magic-mongodb-shard') or node.run_list.roles.include?('magic-mongodb-config')
+    if node.run_list.roles.include?('magic-mongodb-shard')
+        port_api = '28018'
+    else
+        port_api = '28019'
+    end
+    for plugin in ['mongo_btree', 'mongo_lock', 'mongo_ops', 'mongo_conn', 'mongo_mem']
+        template "/usr/share/munin/plugins/#{plugin}" do
+            source "#{plugin}.erb"
+            mode 0755
+            variables({
+            'port' => port_api
+            })
+        end
+
+        link "/etc/munin/plugins/#{plugin}" do
+            to "/usr/share/munin/plugins/#{plugin}"
+            notifies :restart, 'service[munin-node]'
+        end
+
+    end
+end

@@ -57,6 +57,9 @@
             "600-nagios": {
               "rule": "--protocol tcp --dport 5666 --match state --state NEW --jump ACCEPT"
             },
+            "700-mongo-monitoring": {
+              "rule": "--protocol tcp --dport 28019 --match state --state NEW --jump ACCEPT"
+            },
             "default": "DROP [0:0]"
           }
         }
