@@ -44,6 +44,35 @@ git "#{node['operations']['vim']['vim_directory']}/bundle/nerdtree" do
     action :sync
 end
 
+git "#{node['operations']['vim']['vim_directory']}/bundle/vim-nerdtree-tabs" do
+    repository "https://github.com/jistr/vim-nerdtree-tabs.git"
+    action :sync
+end
+
+python_pip 'jedi' do 
+    action :install
+end
+
+unless File.directory?("#{node['operations']['vim']['vim_directory']}/bundle/jedi-vim")
+    bash "checking out jedi recursively" do
+        code <<-EOF
+        git clone --recursive https://github.com/davidhalter/jedi-vim.git #{node['operations']['vim']['vim_directory']}/bundle/jedi-vim
+        EOF
+    end
+
+    ## HACK to remove annoying warnings
+    # Some day I guess vim-jedi will be fixed and you can remove this
+    
+    cookbook_file "#{node['operations']['vim']['vim_directory']}/bundle/jedi-vim/jedi/jedi/api/classes.py" do
+        source 'classes.py'
+    end
+
+end
+
+
+
+
+
 #Solarized theme
 git "#{node['operations']['vim']['vim_directory']}/bundle/vim-colors-solarized" do
     repository "git://github.com/altercation/vim-colors-solarized.git"

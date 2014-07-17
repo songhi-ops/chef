@@ -26,7 +26,7 @@ colorscheme solarized
 "colorscheme blackboard
 
 " NERDTree
-map <C-n> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeMirrorToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | 
 let mapleader = ','
 let NERDTreeQuitOnOpen=1

@@ -24,6 +24,13 @@ define service {
 define service {
         use                             generic-service
         host_name                       <%= @hostname %>
+        service_description             data_partition
+        check_command                   check_disk!20%!10%!/data
+        }
+
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
         service_description             memory
         check_command                   check_memory!94!95
         }

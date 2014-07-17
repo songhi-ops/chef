@@ -27,3 +27,10 @@ define service {
         service_description             memory
         check_command                   check_memory!94!95
         }
+
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             check_nginx
+        check_command                   check_nginx
+        }
