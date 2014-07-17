@@ -26,3 +26,7 @@ end
 package 'mlocate' do
   action :install
 end
+
+package 'python-pip' do
+  action :install
+end

@@ -27,3 +27,19 @@ define service {
         service_description             memory
         check_command                   check_memory!94!95
         }
+
+#https://github.com/mzupan/nagios-plugin-mongodb
+#
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             mongodb_connection
+        check_command                   check_mongodb!connect!27018!2!4
+        }
+
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             mongodb_replicaset
+        check_command                   check_mongodb!replset_state!27018!0!0
+        }

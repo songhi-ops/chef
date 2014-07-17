@@ -5,6 +5,10 @@ package 'nrpe'
 package 'php' 
 package 'httpd'
 
+python_pip "pymongo" do
+    action :install
+end
+
 cookbook_file "/var/www/html/index.php" do
     owner 'root'
     group 'root'
@@ -47,20 +51,9 @@ end
 
 plugins = [
     "check_api",
-    "check_database_pgsql",
-    "check_elasticsearch",
-    "check_error_log",
-    "check_exit_status",
-    "check_haproxy",
-    "check_kannel",
-    "check_memcached",
     "check_memory",
-    "check_mountpoints",
     "check_nginx",
-    "check_pg_streaming_replication",
-    "check_redis",
-    "check_tunnel",
-    "check_varnishbackends"
+    "check_mongodb"
 ]
 
 plugins.each do | plugin |
@@ -79,7 +72,8 @@ end
 server_types = [
     [ 'applications', 'role:magic-app' ],
     [ 'load_balancers', 'role:magic-load-balancer' ],
-    [ 'data_bases', 'role:magic-mongodb*' ]
+    [ 'data_bases', 'role:magic-mongodb-shard' ],
+    [ 'data_bases_config', 'role:magic-mongodb-config' ]
 ]
 
 server_types.each do | servers | 
