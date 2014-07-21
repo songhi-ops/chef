@@ -51,3 +51,9 @@ nnoremap <F10> 10gt
 map <C-m> :tabs<CR>
 
 set langmenu=en_US.UTF-8
+
+" resize current buffer by +/- 5 
+nnoremap <S-left> :vertical resize -5<cr>
+nnoremap <S-down> :resize +5<cr>
+nnoremap <S-up> :resize -5<cr>
+nnoremap <S-right> :vertical resize +5<cr>
