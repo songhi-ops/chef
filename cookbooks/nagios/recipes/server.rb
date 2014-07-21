@@ -83,7 +83,7 @@ server_types.each do | servers |
             variables ({
                 'hostname' => server[:hostname],
                 'ipaddress' => server[:ipaddress],
-                'cores' => server[:cpu].count
+                'cores' => server[:cpu][:total]
             
             })
             notifies :reload, 'service[nagios]'
