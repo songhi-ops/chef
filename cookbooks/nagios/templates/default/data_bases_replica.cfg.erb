@@ -50,10 +50,3 @@ define service {
         service_description             mongodb_replicaset
         check_command                   check_mongodb!replset_state!27018!0!0
         }
-
-define service {
-        use                             generic-service
-        host_name                       <%= @hostname %>
-        service_description             mongodb_config_connection
-        check_command                   check_mongodb!connect!27019!2!4
-        }

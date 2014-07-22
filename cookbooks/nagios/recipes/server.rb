@@ -73,8 +73,10 @@ server_types = [
     [ 'applications', 'role:magic-app' ],
     [ 'load_balancers', 'role:magic-load-balancer' ],
     [ 'data_bases', 'role:magic-mongodb-shard' ],
+    [ 'data_bases_replica', 'role:magic-mongodb-replica' ],
     [ 'data_bases_config', 'role:magic-mongodb-config' ]
 ]
+
 
 server_types.each do | servers | 
     search(:node, servers[1], %w(ipaddress hostname cpu)).each do | server |
