@@ -181,6 +181,7 @@ roles.each do |role,file|
         # Create initialization scripts (meant to be run manually
         if role == 'replica'
             array="#{node['mongodb']['config']['replSet']}".split("/").last.split(",")
+            id="#{node['mongodb']['config']['replSet']}".split("/").first
             template "/tmp/initialize-replica.js" do
                 cookbook node['mongodb']['template_cookbook']
                 source 'initialize-replica.js.erb'
@@ -188,7 +189,8 @@ roles.each do |role,file|
                 owner 'root'
                 mode 600
                 variables(
-                    :array => array
+                    :array => array,
+                    :id => id
                 )
                 action :create
             end
@@ -328,6 +330,8 @@ rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
     source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
     action :install
 end
+
+
 
 
 bash 'chkconfig' do
