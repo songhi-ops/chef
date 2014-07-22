@@ -331,7 +331,11 @@ rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
     action :install
 end
 
-
+cookbook_file "/etc/mongodb-mms/monitoring-agent.config" do
+    source "monitoring-agent.config"
+    owner 'mongodb-mms-agent'
+    group 'mongodb-mms-agent'
+end
 
 
 bash 'chkconfig' do
