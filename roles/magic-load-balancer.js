@@ -45,11 +45,22 @@
           "filehandle_limit": 65000
         }
       }
+    },
+    "sysctl":{
+        "allow_sysctl_conf": true,
+        "params": {
+            "net": {
+                "ipv4": {
+                    "tcp_tw_reuse": 1
+                }
+            }
+        }
     }
   },
   "name": "magic-load-balancer",
   "run_list": [
     "recipe[operations]",
+    "recipe[sysctl::apply]",
     "recipe[ulimit]",
     "recipe[nginx]",
     "recipe[iptables-ng]",
