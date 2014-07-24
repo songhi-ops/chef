@@ -41,8 +41,8 @@ service 'munin-node' do
 end
 
 
-if node.run_list.roles.include?('magic-mongodb-shard') or node.run_list.roles.include?('magic-mongodb-config')
-    if node.run_list.roles.include?('magic-mongodb-shard')
+if node.run_list.roles.include?('magic-mongodb-shard') or node.run_list.roles.include?('magic-mongodb-config') or node.run_list.roles.include?('magic-mongodb-replica')
+    if node.run_list.roles.include?('magic-mongodb-shard') or node.run_list.roles.include?('magic-mongodb-replica')
         port_api = '28018'
     else
         port_api = '28019'
