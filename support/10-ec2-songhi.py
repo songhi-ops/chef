@@ -149,7 +149,7 @@ template_stage_template = {
         'instance_type' : 'm3.medium',
         'security_group_ids' : ['sg-5935bd3c'],
         'region' : region_us_east_1c_public,
-        'ebs_optimized' : 'False'
+        'ebs_optimized' : False
         }
 
 """
@@ -163,7 +163,7 @@ template_mongo_shard_east_1a_paravirtual_3500iops = {
         'instance_type' : 'r3.xlarge',
         'security_group_ids' : ['sg-d6d542b3'],
         'region' : region_us_east_1a_private,
-        'ebs_optimized' : 'True'
+        'ebs_optimized' : True
         }
 
 # mongo_shard_east_1c_paravirtual 
@@ -193,7 +193,7 @@ template_mongo_shard_east_1c_hvm_3500iops['region'] = region_us_east_1c_private
 
 
 template_mongo_shard_east_1c_hvm_750iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
-template_mongo_shard_east_1a_hvm_750iops['image_id'] = 'ami-4e804d26' 
+template_mongo_shard_east_1c_hvm_750iops['image_id'] = 'ami-4e804d26' 
 
 template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
 template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
@@ -209,7 +209,7 @@ template_mongo_config_east_1a_paravirtual_3500iops = {
         'instance_type' : 't1.micro',
         'security_group_ids' : ['sg-d6d542b3'],
         'region' : region_us_east_1a_private,
-        'ebs_optimized' : 'False'
+        'ebs_optimized' : False
         }
 
 
@@ -232,7 +232,7 @@ template_lb_east_1c = {
         'instance_type' : 'm1.xlarge',
         'security_group_ids' : ['sg-e1335784'],
         'region' : region_us_east_1c_public,
-        'ebs_optimized' : 'False'
+        'ebs_optimized' : False
         }
 
 
@@ -250,7 +250,7 @@ template_application_east_1a = {
         'instance_type' : 'c3.xlarge',
         'security_group_ids' : ['sg-74016511'],
         'region' : region_us_east_1a_private,
-        'ebs_optimized' : 'False'
+        'ebs_optimized' : False
         }
 
 template_application_east_1c = deepcopy(template_application_east_1a)
@@ -297,12 +297,12 @@ def aws_launch (template_original, name, instance_type=None, region=None):
         for sg in template['security_group_ids'] :
             command = command + ' ' + sg
     command = command + ']'
-    command = command + ', ebs_optimized=' + template['ebs_optimized']
+    command = command + ', ebs_optimized=' + str(template['ebs_optimized'])
     command = command + ')'
 
 
     print command    
-    r = connection.run_instances(image_id=template['image_id'], key_name=template['key_name'], instance_type=instance_size, placement=region['region'], subnet_id=region['subnet_id'], disable_api_termination=True, security_group_ids=template['security_group_ids'], network_interfaces=region['interfaces'])
+    r = connection.run_instances(image_id=template['image_id'], key_name=template['key_name'], instance_type=instance_size, placement=region['region'], subnet_id=region['subnet_id'], disable_api_termination=True, security_group_ids=template['security_group_ids'], network_interfaces=region['interfaces'], ebs_optimized=template['ebs_optimized'])
     instance = r.instances[0]
     instance.add_tag(key='Name', value=name)
 
