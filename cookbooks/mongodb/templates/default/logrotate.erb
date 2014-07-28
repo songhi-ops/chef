@@ -1,0 +1,13 @@
+/data/log/mongodb/<%= @process %>.log {
+    daily
+    rotate 30
+    compress
+    dateext
+    missingok
+    notifempty
+    sharedscripts
+    copytruncate
+    postrotate
+        /bin/kill -SIGUSR1 `cat /var/run/mongodb/<%= @process %>.pid 2> /dev/null` 2> /dev/null || true
+    endscript
+}

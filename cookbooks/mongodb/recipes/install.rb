@@ -229,6 +229,21 @@ roles.each do |role,file|
                 action :create
             end
         end
+
+        #Create logrotate
+
+        template "/etc/logrotate.d/#{file}" do
+            source "logrotate.erb"
+            group "root"
+            owner "root"
+            mode 0644
+            variables(
+                :process => file
+            )
+        end
+
+
+ 
     end
 end
 
