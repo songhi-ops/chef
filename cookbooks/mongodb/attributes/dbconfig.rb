@@ -29,6 +29,7 @@ default['mongodb']['config']['configsvr'] = nil
 default['mongodb']['config']['configdb'] = nil
 default['mongodb']['config']['rest'] = 'true'
 default['mongodb']['config']['httpinterface'] = 'true'
+default['mongodb']['config']['directoryperdb'] = 'true'
 
 
 
