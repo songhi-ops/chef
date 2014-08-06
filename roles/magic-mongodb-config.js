@@ -30,6 +30,7 @@
     },
     "mongodb": {
       "configsrv": true,
+      "arbiter": true,
       "standalone": false
     },
     "iptables-ng": {
@@ -59,6 +60,9 @@
             },
             "700-mongo-monitoring": {
               "rule": "--protocol tcp --dport 28019 --match state --state NEW --jump ACCEPT"
+            },
+            "800-mongo-monitoring": {
+              "rule": "--protocol tcp --dport 3000 --match state --state NEW --jump ACCEPT"
             },
             "default": "DROP [0:0]"
           }

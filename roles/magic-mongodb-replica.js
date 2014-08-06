@@ -9,7 +9,8 @@
       "configsrv": false,
       "standalone": false,
       "shard": true,
-      "replica": true
+      "replica": true,
+      "arbiter": false
     },
     "ulimit": {
       "users": {

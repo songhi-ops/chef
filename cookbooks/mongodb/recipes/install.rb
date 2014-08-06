@@ -16,7 +16,8 @@ roles = [
     ["mongos", "mongos"],
     ["replica", "mongod"],
     ["configsrv", "mongo-config"],
-    ["standalone", "mongod"]
+    ["standalone", "mongod"],
+    ["arbiter", "mongo-arbiter"]
 ]
 
 roles.each do |role,file|
@@ -60,9 +61,9 @@ roles.each do |role,file|
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
         when  'replica'
-            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongod.log'
+            node.override['mongodb']['config']['logpath'] = '/log/mongod.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongod.pid'
-            node.override['mongodb']['config']['dbpath'] = '/data/lib/mongo'
+            node.override['mongodb']['config']['dbpath'] = '/data'
             node.override['mongodb']['config']['configdb'] = nil
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = node['mongodb']['replica_string']
@@ -77,6 +78,15 @@ roles.each do |role,file|
             node.override['mongodb']['config']['configsvr'] = nil
             node.override['mongodb']['config']['replSet'] = nil
             node.override['mongodb']['config']['shardsvr'] = nil
+        when  'arbiter'
+            node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-arbiter.log'
+            node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-arbiter.pid'
+            node.override['mongodb']['config']['dbpath'] = '/data/lib/mongo-arbiter'
+            node.override['mongodb']['config']['configdb'] = nil
+            node.override['mongodb']['config']['configsvr'] = nil
+            node.override['mongodb']['config']['replSet'] = node['mongodb']['replica_string'].split('/')[0]
+            node.override['mongodb']['config']['shardsvr'] = nil
+            node.override['mongodb']['config']['port'] = '3000'
         end
         
         
@@ -85,6 +95,7 @@ roles.each do |role,file|
         # Create /etc/init.d/mongo
         if role != 'mongos'
 
+            Chef::Log.warn("AAAAAAAAAAAAAAA: #{role} #{init_file}")
             template init_file do
               cookbook node['mongodb']['template_cookbook']
               source node['mongodb']['init_script_template']
@@ -175,6 +186,16 @@ roles.each do |role,file|
                 code <<-EOF
                 chcon system_u:object_r:var_lib_t:s0 #{node['mongodb']['config']['dbpath']}
                 EOF
+            end
+        end
+
+
+        #journal symlink
+        if role == 'replica'
+            if not File.symlink?('/data/journal')
+                link "/data/journal" do
+                    to "/journal"
+                end
             end
         end
 
@@ -295,10 +316,13 @@ end
 # mongod user doesnt exists at the moment of creating the directories
 
 
+
 bash 'change ownership directories' do
         user "root"
         code <<-EOH
                 chown mongod.mongod -R /data
+                ls /journal && chown mongod.mongod -R /journal
+                ls /log && chown mongod.mongod -R /log
         EOH
 end
 

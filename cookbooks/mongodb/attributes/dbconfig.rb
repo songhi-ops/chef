@@ -15,7 +15,7 @@ end
 
 
 default['mongodb']['config']['bind_ip'] = '0.0.0.0'
-default['mongodb']['config']['logpath'] = '/data/log/mongodb/mongodb.log'
+default['mongodb']['config']['logpath'] = '/log/mongodb.log'
 default['mongodb']['config']['logappend'] = true
 default['mongodb']['config']['pidfilepath'] = nil
 default['mongodb']['config']['dbpath'] = nil
@@ -30,6 +30,7 @@ default['mongodb']['config']['configdb'] = nil
 default['mongodb']['config']['rest'] = 'true'
 default['mongodb']['config']['httpinterface'] = 'true'
 default['mongodb']['config']['directoryperdb'] = 'true'
+default['mongodb']['config']['port'] = nil
 
 
 

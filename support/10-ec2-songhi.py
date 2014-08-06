@@ -180,7 +180,7 @@ template_mongo_shard_east_1a_hvm_3500iops['image_id'] =  'ami-8afa12e2'
 template_mongo_shard_east_1a_hvm_3500iops['instance_type'] =  'r3.xlarge'
 
 template_mongo_shard_east_1a_hvm_750iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
-template_mongo_shard_east_1a_hvm_750iops['image_id'] = 'ami-4e804d26' 
+template_mongo_shard_east_1a_hvm_750iops['image_id'] = 'ami-1416c07c' 
 
 
 template_mongo_shard_east_1a_hvm_1500iops = deepcopy(template_mongo_shard_east_1a_hvm_3500iops)
@@ -193,7 +193,7 @@ template_mongo_shard_east_1c_hvm_3500iops['region'] = region_us_east_1c_private
 
 
 template_mongo_shard_east_1c_hvm_750iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
-template_mongo_shard_east_1c_hvm_750iops['image_id'] = 'ami-4e804d26' 
+template_mongo_shard_east_1c_hvm_750iops['image_id'] = 'ami-1416c07c' 
 
 template_mongo_shard_east_1c_hvm_1500iops = deepcopy(template_mongo_shard_east_1c_hvm_3500iops)
 template_mongo_shard_east_1c_hvm_1500iops['image_id'] = 'ami-ac1ae7c4'
