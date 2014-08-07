@@ -270,19 +270,6 @@ def aws_launch (template_original, name, instance_type=None, region=None):
 
     connection = region['connection']
 
-
-    #if 'us-east-1' in region:
-    #    connection = conn_east
-    #elif 'us-west-2' in region:
-    #    connection = conn_west
-    #elif 'eu-west-1' in region:
-    #    connection = conn_eu
-    #elif 'ap-southeast-1' in region:
-    #    connection = conn_ap
-    #else:
-    #    print 'Unkown region'
-    #    return 
-
     command = "run_instances(image_id=" + template['image_id']
     command = command + ", key_name=" + template['key_name']
     command = command + ", instance_type=" + instance_size
@@ -304,6 +291,7 @@ def aws_launch (template_original, name, instance_type=None, region=None):
     print command    
     r = connection.run_instances(image_id=template['image_id'], key_name=template['key_name'], instance_type=instance_size, placement=region['region'], subnet_id=region['subnet_id'], disable_api_termination=True, security_group_ids=template['security_group_ids'], network_interfaces=region['interfaces'], ebs_optimized=template['ebs_optimized'])
     instance = r.instances[0]
+    time.sleep(5)
     instance.add_tag(key='Name', value=name)
 
     while instance.state == u'pending':
@@ -316,7 +304,9 @@ def aws_launch (template_original, name, instance_type=None, region=None):
 
     user_data = "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /Volumes/untitled/SongHi/operations.pem root@" + instance.private_ip_address + " 'curl --connect-timeout 10 -u operations:smothcooperat0r http://10.0.0.74:801/hosts.php?hostname=" + name + " | bash '" 
     print user_data
-    os.system(user_data)
+    while not os.system(user_data) == 0 :
+        time.sleep(15)
+
 
     print "Instance created: " + r.instances[0].id
     print "private IP : :"
