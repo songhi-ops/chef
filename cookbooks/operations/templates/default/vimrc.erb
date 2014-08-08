@@ -57,3 +57,17 @@ nnoremap <S-left> :vertical resize -5<cr>
 nnoremap <S-down> :resize +5<cr>
 nnoremap <S-up> :resize -5<cr>
 nnoremap <S-right> :vertical resize +5<cr>
+
+" airline
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'

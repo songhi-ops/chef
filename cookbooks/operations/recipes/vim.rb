@@ -70,6 +70,10 @@ unless File.directory?("#{node['operations']['vim']['vim_directory']}/bundle/jed
 end
 
 
+git "#{node['operations']['vim']['vim_directory']}/bundle/" do
+    repository "https://github.com/bling/vim-airline"
+    action :sync
+end
 
 
 
