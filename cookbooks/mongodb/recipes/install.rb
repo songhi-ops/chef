@@ -319,10 +319,11 @@ end
 
 bash 'change ownership directories' do
         user "root"
+        returns [0,1]
         code <<-EOH
                 chown mongod.mongod -R /data
-                ls /journal && chown mongod.mongod -R /journal
-                ls /log && chown mongod.mongod -R /log
+                [ -d /journal ] && chown mongod.mongod -R /journal
+                [ -d /journal ] && chown mongod.mongod -R /log
         EOH
 end
 
