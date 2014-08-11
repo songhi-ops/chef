@@ -63,3 +63,18 @@ if node.run_list.roles.include?('magic-mongodb-shard') or node.run_list.roles.in
 
     end
 end
+
+if node.run_list.roles.include?('magic-load-balancer')
+    cookbook_file "/usr/share/munin/plugins/response_time" do
+        owner "root"
+        group "root"
+        source "response_time"
+        mode 0644
+    end
+    
+    link '/etc/munin/plugins/response_time' do
+        to '/usr/share/munin/plugins/response_time'
+        notifies :restart, 'service[munin-node]'
+    end
+end
+
