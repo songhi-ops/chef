@@ -18,7 +18,7 @@ else:
         if r.status_code != 200 :
             print 'time.value -1'
         else: 
-            print 'time.value ' + str(r.elapsed)
+            print 'time.value ' + str(r.elapsed.seconds)
     except :
         print 'time.value -1'
 

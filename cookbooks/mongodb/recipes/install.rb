@@ -52,6 +52,7 @@ roles.each do |role,file|
             node.override['mongodb']['package_name'] = ['mongodb-org-mongos', 'mongodb-org-shell']
             node.override['mongodb']['config']['rest'] = nil
             node.override['mongodb']['config']['httpinterface'] = nil
+            node.override['mongodb']['config']['directoryperdb'] = nil
         when  'configsrv'
             node.override['mongodb']['config']['logpath'] = '/data/log/mongodb/mongo-config.log'
             node.override['mongodb']['config']['pidfilepath'] = '/var/run/mongodb/mongo-config.pid'
@@ -361,14 +362,16 @@ package "xfsprogs" do
   action :install
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
-    source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
-    action :create
-end
-
-rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
-    source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
-    action :install
+if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm")     
+    remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
+        source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+        action :create
+    end
+    
+    rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
+        source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+        action :install
+    end
 end
 
 cookbook_file "/etc/mongodb-mms/monitoring-agent.config" do
