@@ -10,7 +10,8 @@
       "standalone": false,
       "shard": true,
       "replica": true,
-      "arbiter": false
+      "arbiter": false,
+      "backup": false
     },
     "ulimit": {
       "users": {

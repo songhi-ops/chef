@@ -16,6 +16,7 @@ default[:mongodb][:mongos] = false
 default[:mongodb][:configsrv] = false
 default[:mongodb][:replica] = false
 default[:mongodb][:standalone] = true
+default[:mongodb][:backup] = false
 default[:mongodb][:shard] = false
 default[:mongodb][:config_template] = 'mongod.conf.erb'
 

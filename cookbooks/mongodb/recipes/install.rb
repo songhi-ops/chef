@@ -374,6 +374,9 @@ if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-age
     end
 end
 
+
+
+
 cookbook_file "/etc/mongodb-mms/monitoring-agent.config" do
     source "monitoring-agent.config"
     owner 'mongodb-mms-agent'
@@ -385,4 +388,30 @@ bash 'chkconfig' do
     code <<-EOF
     chkconfig mongodb-mms-monitoring-agent on
     EOF
+end
+
+if node['mongodb']['backup']
+    if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm") 
+        remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm" do
+            source "https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm"
+            action :create
+        end
+        
+        rpm_package "mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm" do
+            source "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm"
+            action :install
+        end
+    end
+
+    cookbook_file "/etc/mongodb-mms/backup-agent.config" do
+        source "backup-agent.config"
+        owner 'mongodb-mms-agent'
+        group 'mongodb-mms-agent'
+    end
+
+    bash 'chkconfig' do
+        code <<-EOF
+        chkconfig mongodb-mms-monitoring-agent on
+        EOF
+    end
 end

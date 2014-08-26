@@ -31,7 +31,8 @@
     "mongodb": {
       "configsrv": true,
       "arbiter": true,
-      "standalone": false
+      "standalone": false,
+      "backup": true
     },
     "iptables-ng": {
       "rules": {
