@@ -14,7 +14,7 @@ if len(sys.argv) > 1 :
         print 'time.label request'
 else:
     try :
-        r = requests.get('https://magic-loadtest.songhi.com/melody-match-server/do?version=1.0&sig=ignoredignoredignored&msg_type_id=13&json_payload={%20%22auth_token%22%20:%20%22ignored%22,%20%22uid%22:%20%22testFBUser1%22,%20%22fb_data%22%20:%20[%20{%20%22platform_id%22%20:%201%20},%20{%20%22platform_user_id%22%20:%20%22testFBUser1%22%20},%20{%20%22platform_first_name%22%20:%20%22testFBUser1Name%22%20},%20{%20%22platform_profile_image_url%22%20:%20%22http://ignored.com/img/testFBUser1Im.jpg%22%20},%20{%20%22platform_friends_ids%22%20:%20[%20%22testFBUser1%22,%20%22testFBUser2%22%20]%20}%20]%20}')
+        r = requests.get('https://localhost.songhi.com/melody-match-server/do?version=1&msg_type_id=7&json_payload=%7B%22uid%22:%22d14096123fe6a33ee5a73746%22%7D&sig=71129494437577dde9151a16a639cedb690d9164')
         if r.status_code != 200 :
             print 'time.value -1'
         else: 

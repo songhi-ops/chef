@@ -4,6 +4,8 @@ package 'nagios-plugins-nrpe'
 package 'nrpe' 
 package 'php' 
 package 'httpd'
+package 'ssmtp' 
+package 'sendmail'
 
 python_pip "pymongo" do
     action :install
@@ -112,3 +114,34 @@ service 'httpd' do
   retries 4
   retry_delay 30
 end
+
+service "sendmail" do
+    action [:stop, :disable]
+end
+
+
+cookbook_file "/etc/ssmtp/ssmtp.conf" do
+    owner 'root'
+    group 'root'
+    source 'ssmtp.conf'
+    mode 0644
+end
+
+
+bash "removing sendmail" do
+    code <<-EOF
+    [ -f /usr/sbin/sendmail ] && mv /usr/sbin/sendmail /usr/sbin/sendmail.orig.`date +%F`
+    ln -s /usr/sbin/ssmtp /usr/sbin/sendmail
+    EOF
+end
+
+if node.chef_environment == "_default"
+    cookbook_file "/etc/nagios/objects/contacts.cfg" do
+        owner 'root'
+        group 'root'
+        source 'contacts.cfg'
+        mode 0644
+        notifies :reload, 'service[nagios]'
+    end
+end
+

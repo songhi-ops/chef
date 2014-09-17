@@ -1,0 +1,18 @@
+<Location /svn>
+
+  DAV svn
+
+  SVNParentPath <%= node['subversion']['repo_dir'] %>
+
+  SVNListParentPath <%= node['subversion']['list_parent_path'] %>
+
+  AuthType Basic
+
+  AuthName "Subversion repository"
+
+  AuthUserFile <%= node['subversion']['repo_dir'] %>/htpasswd
+  AuthzSVNAccessFile <%= node['subversion']['repo_dir'] %>/svn-access-file
+
+  Require valid-user
+
+</Location>

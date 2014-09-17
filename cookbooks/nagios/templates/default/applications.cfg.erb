@@ -42,3 +42,9 @@ define service {
         check_command                   check_mongodb!connect!27017!2!4
         }
 
+define service {
+        use                             generic-service
+        host_name                       <%= @hostname %>
+        service_description             status_url
+        check_command                   check_status_url
+        }

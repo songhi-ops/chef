@@ -5,7 +5,8 @@ plugins = [
     "check_api",
     "check_memory",
     "check_nginx",
-    "check_mongodb"
+    "check_mongodb",
+    "check_status_url"
 ]
 
 
@@ -27,7 +28,11 @@ plugins.each do | plugin |
     end
 end
 
+Chef::Log.warn("HEEEY: #{node.run_list.roles}")
 
+if node.run_list.roles.include?('magic-app') 
+    python_pip "requests"
+end
 
 
 service 'nrpe' do

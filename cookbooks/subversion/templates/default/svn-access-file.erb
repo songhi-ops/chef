@@ -1,0 +1,18 @@
+<% 
+
+
+%>
+# Create two groups and assign some users from the users auth file
+[groups]
+developers = subversion
+artists = subversion2
+
+# Give the developers group read/write access to repo1
+[repo:/]
+@developers = rw
+
+# Give the designers group read/write access to repo2
+[repo2:/]
+@artists = rw
+
+

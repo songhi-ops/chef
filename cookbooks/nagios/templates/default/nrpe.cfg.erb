@@ -227,6 +227,7 @@ command[check_haproxy]=/usr/lib64/nagios/plugins/check_haproxy -u 'http://127.0.
 command[check_elasticsearch]=/usr/lib64/nagios/plugins/check_elasticsearch
 command[check_location_service]=/usr/lib64/nagios/plugins/check_http -H localhost -p 8201 -s '{"_type":"args","status":"OK"}' -u /location/status
 command[check_tunnel]=/usr/lib64/nagios/plugins/check_tunnel $ARG1$
+command[check_status_url]=/usr/lib64/nagios/plugins/check_status_url
 
 # The following examples allow user-supplied arguments and can
 # only be used if the NRPE daemon was compiled with support for 
