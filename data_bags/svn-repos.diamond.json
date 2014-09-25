@@ -1,0 +1,9 @@
+{
+  "id": "diamond",
+  "users": {
+    "encrypted_data": "idVtIgUTGcZTXMl06oFD6/lJc03WZFvj6RZN7kecxnDZ8lT/4hOzuDlIIFKv\n0oOR3p7XEAy/zoy/SrA+gBcvKOYCTgPcAIKGlhhJxoReuS0=\n",
+    "iv": "2AqYP6OjE/AGdTjKRN6f0A==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}

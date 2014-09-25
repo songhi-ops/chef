@@ -1,0 +1,9 @@
+{
+  "id": "ruby",
+  "users": {
+    "encrypted_data": "fMT/Lt6wXn5qBqBryn7SE37I/4tikXe+4mRRN6eP0Mg6CnjyB04NilY8eSu5\nnkI/6u/joRSYtnNyTAC12ZQ8ACGiLEq6/D7qS9eLpK3Aa4w=\n",
+    "iv": "gZ0W7Ce47kTYWyqZppoFMQ==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}
