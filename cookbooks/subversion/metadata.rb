@@ -14,6 +14,7 @@ supports 'ubuntu'
 supports 'windows'
 
 depends 'apache2', '~> 1.7'
+depends 'users'
 recommends 'windows', '~> 1.10'
 
 recipe 'subversion', 'Includes the client recipe.'

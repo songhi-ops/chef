@@ -61,6 +61,17 @@ search(:svn_repos, "*:*", %w(id)).each do |encrypted|
       not_if "[ -d '#{node['subversion']['repo_dir']}/#{repo['id']}' ]"
     end
 
+    bash "Setting permissions to repo directory..." do
+        code <<-EOF
+        chmod -R 0770 #{node['subversion']['repo_dir']}/#{repo['id']}
+        EOF
+    end
+
+    Chef::Log.warn("HEEEEEEY: svn_#{repo['id']}")
+    users_manage "svn_#{repo['id']}" do
+      action [ :remove, :create ]
+    end
+    
 
     repo['users'].each do |user|
         execute 'create htpasswd file' do
@@ -70,7 +81,6 @@ search(:svn_repos, "*:*", %w(id)).each do |encrypted|
 
 end
 
-Chef::Log.warn("HEEEEY: #{repo_list}")
 
 template "#{node['subversion']['repo_dir']}/svn-access-file" do
     source "svn-access-file.erb"
@@ -78,7 +88,7 @@ template "#{node['subversion']['repo_dir']}/svn-access-file" do
     group "root"
     mode 0644
     variables ({
-        :encrypted => repo_list 
+        :repo_list => repo_list 
     })
 end
 

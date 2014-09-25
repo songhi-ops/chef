@@ -1,18 +1,23 @@
-<% 
 
-
-%>
-# Create two groups and assign some users from the users auth file
 [groups]
-developers = subversion
-artists = subversion2
+<% 
+@repo_list.each do |repo|
+    users = repo[1][0]["username"]
+    size = repo[1].length - 1
+    repo[1][1..size].each do |user|
+        users = users + ', ' + user["username"]
+    end
+%>
+<%= repo[0] %> = <%= users %>
+<%
+    users = ''
+end%>
 
-# Give the developers group read/write access to repo1
-[repo:/]
-@developers = rw
-
-# Give the designers group read/write access to repo2
-[repo2:/]
-@artists = rw
-
+<%
+@repo_list.each do |repo|
+%>
+[<%= repo[0] %>:/]
+@<%= repo[0] %> = rw
+<%= %>
+<% end %>
 

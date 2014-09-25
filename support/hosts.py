@@ -10,6 +10,7 @@ while True:
     else:
         json_string = json_string + new_line
 
+
 nodes = json.loads ("[" + json_string + "]")
 
 for node in nodes[0]['rows'] :
