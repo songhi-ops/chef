@@ -30,3 +30,7 @@ end
 package 'python-pip' do
   action :install
 end
+
+package 'unzip' do
+  action :install
+end
