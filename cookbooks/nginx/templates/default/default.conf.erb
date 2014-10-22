@@ -23,6 +23,7 @@ server {
 
     ssl_certificate     /etc/pki/tls/certs/server.crt;
     ssl_certificate_key /etc/pki/tls/private/server.key;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
     # Block all script requests
     location ~ /(cgi-bin|twiki|script|scripts) {
