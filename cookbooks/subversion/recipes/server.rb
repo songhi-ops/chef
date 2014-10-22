@@ -67,7 +67,6 @@ search(:svn_repos, "*:*", %w(id)).each do |encrypted|
         EOF
     end
 
-    Chef::Log.warn("HEEEEEEY: svn_#{repo['id']}")
     users_manage "svn_#{repo['id']}" do
       action [ :remove, :create ]
     end
