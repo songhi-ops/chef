@@ -1,0 +1,90 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: graylog2-web
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Graylog2-web-interface init script
+# Description: Graylog2-web-interface init script
+### END INIT INFO
+## Source function library.
+. /etc/init.d/functions
+NAME="graylog2-web-interface"
+GRAYLOG2_WEB_HOME=/opt/graylog2-web-interface
+GRAYLOG2_WEB=$GRAYLOG2_WEB_HOME/bin/graylog2-web-interface
+GRAYLOG2_WEB_OUT="/var/log/graylog2-web.log"
+PID_FILE="$GRAYLOG2_WEB_HOME/RUNNING_PID"
+LOCK_FILE="/var/lock/subsys/${NAME}"
+JAVA="/usr/bin/java"
+JAVA_OPTS="-Xms${mem}m -Xmx${mem}m -XX:MaxPermSize=${perm}m -XX:ReservedCodeCacheSize=${codecache}m"
+RUN_AS_USER=root
+if [ ! -r "$GRAYLOG2_WEB" ]; then
+echo "Cannot find $GRAYLOG2_WEB"
+echo "${GRAYLOG2_WEB} is absent or does not have read permission"
+exit 1
+fi
+touch "$GRAYLOG2_WEB_OUT"
+chown $RUN_AS_USER "$GRAYLOG2_WEB_OUT"
+start() {
+echo "Starting $NAME: "
+COMMAND="$GRAYLOG2_WEB >> \"$GRAYLOG2_WEB_OUT\" 2>&1 &"
+daemon --check=${NAME} --user=${RUN_AS_USER} --pidfile=${PID_FILE} ${COMMAND}
+RETVAL=$?
+[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+return $RETVAL
+}
+stop() {
+echo "Stopping $NAME: "
+killproc -p ${PID_FILE} -d 5 ${NAME}
+RETVAL=$?
+[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+return $RETVAL
+}
+restart() {
+stop
+sleep 1
+start
+}
+dump() {
+echo "Dumping $NAME: "
+PID=`cat $PID_FILE`
+kill -3 $PID
+RETVAL=$?
+[ $RETVAL -eq 0 ] && success $"Dumped $NAME." || failure $"Failed to dump $NAME."
+return $RETVAL
+}
+rh_status() {
+status -p ${PID_FILE} ${NAME}
+}
+rh_status_q() {
+rh_status >/dev/null 2>&1
+}
+case "$1" in
+start)
+rh_status_q && exit 0
+start
+;;
+stop)
+rh_status_q || exit 0
+stop
+;;
+restart)
+restart
+;;
+status)
+rh_status
+;;
+dump)
+rh_status_q || exit 0
+dump
+;;
+condrestart|try-restart)
+rh_status_q || exit 0
+restart
+;;
+*)
+echo "Usage: $0 {start|stop|status|restart|condrestart|try-restart|dump}"
+exit 1
+esac
+exit $?

@@ -1,0 +1,96 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: graylog2-server
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Graylog2-server init script
+# Description: Graylog2-server init script
+### END INIT INFO
+## Source function library.
+. /etc/init.d/functions
+NAME="graylog2-server"
+GRAYLOG2_HOME=/opt/graylog2-server
+GRAYLOG2_JAR=$GRAYLOG2_HOME/graylog2-server.jar
+GRAYLOG2_CONF="/etc/graylog2.conf"
+GRAYLOG2_OUT="/var/log/graylog2.log"
+PID_DIR="/var/run/graylog2"
+PID_FILE="${PID_DIR}/${NAME}.pid"
+LOCK_FILE="/var/lock/subsys/${NAME}"
+JAVA="/usr/bin/java"
+JAVA_OPTS="-server -Xms512m -Xmx512m"
+RUN_AS_USER=root
+if [ ! -d "$PID_DIR" ]; then
+mkdir "$PID_DIR"
+chown $RUN_AS_USER "$PID_DIR"
+fi
+if [ ! -r "$GRAYLOG2_JAR" ]; then
+echo "Cannot find $GRAYLOG2_JAR"
+echo "${GRAYLOG2_JAR} is absent or does not have read permission"
+exit 1
+fi
+touch "$GRAYLOG2_OUT"
+chown $RUN_AS_USER "$GRAYLOG2_OUT"
+start() {
+echo "Starting $NAME: "
+COMMAND="$JAVA $JAVA_OPTS -jar $GRAYLOG2_JAR -f $GRAYLOG2_CONF -p $PID_FILE >> \"$GRAYLOG2_OUT\" 2>&1 &"
+daemon --check=${NAME} --user=${RUN_AS_USER} --pidfile=${PID_FILE} ${COMMAND}
+RETVAL=$?
+[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+return $RETVAL
+}
+stop() {
+echo "Stopping $NAME: "
+killproc -p ${PID_FILE} -d 5 ${NAME}
+RETVAL=$?
+[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+return $RETVAL
+}
+restart() {
+stop
+sleep 1
+start
+}
+dump() {
+echo "Dumping $NAME: "
+PID=`cat $PID_FILE`
+kill -3 $PID
+RETVAL=$?
+[ $RETVAL -eq 0 ] && success $"Dumped $NAME." || failure $"Failed to dump $NAME."
+return $RETVAL
+}
+rh_status() {
+status -p ${PID_FILE} ${NAME}
+}
+rh_status_q() {
+rh_status >/dev/null 2>&1
+}
+case "$1" in
+start)
+rh_status_q && exit 0
+start
+;;
+stop)
+rh_status_q || exit 0
+stop
+;;
+restart)
+restart
+;;
+status)
+rh_status
+;;
+dump)
+rh_status_q || exit 0
+dump
+;;
+condrestart|try-restart)
+rh_status_q || exit 0
+restart
+;;
+*)
+echo "Usage: $0 {start|stop|status|restart|condrestart|try-restart|dump}"
+exit 1
+esac
+exit $?

@@ -1,1 +1,1 @@
-default['graylog2']['app_root'] = '/opt'
+default['graylog2']['app_root'] = '/opt/graylog'
