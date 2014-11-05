@@ -302,7 +302,7 @@ def aws_launch (template_original, name, instance_type=None, region=None):
     print instance.state
     time.sleep(15)
 
-    user_data = "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /Volumes/untitled/SongHi/operations.pem root@" + instance.private_ip_address + " 'curl --connect-timeout 10 -u operations:smothcooperat0r http://10.0.0.74:801/hosts.php?hostname=" + name + " | bash '" 
+    user_data = "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i /Volumes/untitled/SongHi/operations.pem root@" + instance.private_ip_address + " 'curl --connect-timeout 10 -u " + https_password  + " http://10.0.0.74:801/hosts.php?hostname=" + name + " | bash '" 
     print user_data
     while not os.system(user_data) == 0 :
         time.sleep(15)

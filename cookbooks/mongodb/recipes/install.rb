@@ -362,7 +362,7 @@ package "xfsprogs" do
   action :install
 end
 
-if not node['mongodb']['standalone']
+if node.chef_environment == '_default'
     if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm")     
         remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
             source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
