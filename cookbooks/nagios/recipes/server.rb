@@ -79,18 +79,25 @@ server_types = [
     [ 'data_bases_config', 'role:magic-mongodb-config' ]
 ]
 
+bash 'remove old config files' do
+    code <<-EOF
+    rm -f /etc/nagios/conf.d/*
+    EOF
+end
 
 server_types.each do | servers | 
     search(:node, servers[1], %w(ipaddress hostname cpu)).each do | server |
-    template "/etc/nagios/conf.d/#{server[:hostname]}.cfg" do
-            source "#{servers[0]}.cfg.erb"  
-            variables ({
-                'hostname' => server[:hostname],
-                'ipaddress' => server[:ipaddress],
-                'cores' => server[:cpu][:total]
-            
-            })
-            notifies :reload, 'service[nagios]'
+    unless server.nil?
+        template "/etc/nagios/conf.d/#{server[:hostname]}.cfg" do
+                source "#{servers[0]}.cfg.erb"  
+                variables ({
+                    'hostname' => server[:hostname],
+                    'ipaddress' => server[:ipaddress],
+                    'cores' => server[:cpu][:total]
+                
+                })
+                notifies :reload, 'service[nagios]'
+            end
         end
     end
 end
