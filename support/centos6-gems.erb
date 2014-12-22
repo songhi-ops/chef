@@ -15,8 +15,11 @@ rpm -Uvh remi-release-6.rpm
 
 yum install -y gcc gcc-c++ automake autoconf make git
 
-if [ ! -f /usr/bin/chef-client ]; then
-  curl -L https://www.opscode.com/chef/install.sh | bash
+if [ ! -f /usr/bin/chef-client ]
+  then
+  curl -L https://www.opscode.com/chef/install.sh > /tmp/install.sh
+  chmod +x /tmp/install.sh
+  /tmp/install.sh -v 11
   
 
   echo export PATH='/opt/chef/embedded/bin:$PATH' >> /root/.bashrc
