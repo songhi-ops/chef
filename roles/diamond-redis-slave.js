@@ -7,8 +7,10 @@
   "default_attributes": {
       "redisio": {
           "servers": [
-          { "port": "6379", "slaveof": {"address": "172.16.91.30", "port":"6379" }}
-          ]
+          { "port": "6379", "slaveof": {"address": "diamond-redis-master.songhi-dev.com", "port":"6379" }}
+          ],
+
+          "sentinels": [{"master_ip":"diamond-redis-master.songhi-dev.com", "sentinel_port": "26379", "master_port" : "6379", "name": "mycluster"}]
       
       }
   },

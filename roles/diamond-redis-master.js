@@ -5,6 +5,13 @@
   "override_attributes": {
   },
   "default_attributes": {
+      "redisio": {
+          "servers": [
+          { "port": "6379"}
+          ],
+          "sentinels": [{"master_ip":"diamond-redis-master.songhi-dev.com", "sentinel_port": "26379", "master_port" : "6379", "name": "mycluster"}]
+      
+      }
   },
   "run_list": [
     "recipe[operations]",
