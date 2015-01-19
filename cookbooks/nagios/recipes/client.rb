@@ -10,7 +10,8 @@ plugins = [
 ]
 
 
-servers = search(:node, "chef_environment:#{node.environment} AND role:magic-nagios-server", %w(ipaddress, fqdn))
+Chef::Log.warn("HEEEY: #{node[:nagios][:app_name]}")
+servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:nagios][:app_name]}-nagios-server", %w(ipaddress, fqdn))
 template "/etc/nagios/nrpe.cfg" do
     source "nrpe.cfg.erb"
     variables({
@@ -28,9 +29,8 @@ plugins.each do | plugin |
     end
 end
 
-Chef::Log.warn("HEEEY: #{node.run_list.roles}")
 
-if node.run_list.roles.include?('magic-app') 
+if node.run_list.roles.include?("#{node[:nagios][:app_name]}-app") 
     python_pip "requests"
 end
 

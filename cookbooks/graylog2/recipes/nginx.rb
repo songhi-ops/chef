@@ -1,5 +1,5 @@
 
-if node.chef_environment == '_default'
+if node.chef_environment == '_default' or /_production_/ =~ node.chef_environment
     cookbook_file "rsyslog.conf" do
         path "/etc/rsyslog.conf"
         action :create

@@ -72,11 +72,11 @@ cookbook_file "/etc/nagios/objects/commands.cfg" do
 end
 
 server_types = [
-    [ 'applications', 'role:magic-app' ],
-    [ 'load_balancers', 'role:magic-load-balancer' ],
-    [ 'data_bases', 'role:magic-mongodb-shard' ],
-    [ 'data_bases_replica', 'role:magic-mongodb-replica' ],
-    [ 'data_bases_config', 'role:magic-mongodb-config' ]
+    [ 'applications', "role:#{node[:nagios][:app_name]}-app" ],
+    [ 'load_balancers', "role:#{node[:nagios][:app_name]}-load-balancer" ],
+    [ 'data_bases', "role:#{node[:nagios][:app_name]}-mongodb-shard" ],
+    [ 'data_bases_replica', "role:#{node[:nagios][:app_name]}-mongodb-replica" ],
+    [ 'data_bases_config', "role:#{node[:nagios][:app_name]}-mongodb-config" ]
 ]
 
 bash 'remove old config files' do
@@ -142,7 +142,7 @@ bash "removing sendmail" do
     EOF
 end
 
-if node.chef_environment == "_default"
+if node.chef_environment == "_default" or /_production_/ =~ node.chef_environment
     cookbook_file "/etc/nagios/objects/contacts.cfg" do
         owner 'root'
         group 'root'

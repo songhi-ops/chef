@@ -1,5 +1,5 @@
 {
-  "name": "magic-munin-server",
+  "name": "diamond-munin-server",
   "description": "",
   "json_class": "Chef::Role",
   "default_attributes": {

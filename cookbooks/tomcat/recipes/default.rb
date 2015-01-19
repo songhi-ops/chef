@@ -59,7 +59,7 @@ directory "/logs/tomcat" do
 end
 
 
-directory "#{node[:tomcat][:log_directory]}/melody-match" do
+directory "#{node[:tomcat][:log_directory]}/#{node[:tomcat][:app_name]}" do
   owner "tomcat"
   group "tomcat"
   mode 00644
@@ -86,11 +86,11 @@ if !File.symlink?("#{node[:tomcat][:log_directory_old]}")
     end
 end
 
-link "/var/log/melody-match" do
+link "/var/log/#{node[:tomcat][:app_name]}" do
     owner 'tomcat'
     group 'tomcat'
     mode 0755
-    to "#{node[:tomcat][:log_directory]}/melody-match"
+    to "#{node[:tomcat][:log_directory]}/#{node[:tomcat][:app_name]}"
 end
 
 
@@ -115,15 +115,15 @@ link "/usr/sbin/tomcat_stop" do
 end
 
 #New relic
-cookbook_file "/root/newrelic_agent3.7.2.tar.gz" do
-    source 'newrelic_agent3.7.2.tar.gz'
-end
-
-bash 'unpacking newrelic' do
-    code <<-EOF
-    tar xzvf /root/newrelic_agent3.7.2.tar.gz -C #{node[:tomcat][:home]}
-    EOF
-end
+#cookbook_file "/root/newrelic_agent3.7.2.tar.gz" do
+#    source 'newrelic_agent3.7.2.tar.gz'
+#end
+#
+#bash 'unpacking newrelic' do
+#    code <<-EOF
+#    tar xzvf /root/newrelic_agent3.7.2.tar.gz -C #{node[:tomcat][:home]}
+#    EOF
+#end
 
 bash "Permissions for /opt/apache... " do
     code <<-EOF
@@ -181,7 +181,7 @@ service 'tomcat' do
   retry_delay 30
 end
 
-if node.chef_environment != '_default'
+if node.chef_environment != '_default' and not /_prod_/ =~ node.chef_environment 
     directory "/home/tomcat/.ssh" do
         owner 'tomcat'
         group 'tomcat'
@@ -210,20 +210,22 @@ execute 'wait for tomcat' do
 end
 
 
-if node.chef_environment == "_default"
-    servers = search(:node, "role:magic-stage", %w(ipaddress, fqdn))
-    bash "Get the build" do
-        code <<-EOF
-        scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/melody-match-server.war /opt/tomcat/webapps/
-        /etc/init.d/tomcat restart
-        EOF
-    end
-end
+#if node.chef_environment == "_default" or /_prod_/ =~ node.chef_environment
+#    servers = search(:node, "#{node[:tomcat][:role_stage]}", %w(ipaddress, fqdn))
+#    bash "Get the build" do
+#        code <<-EOF
+#        scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/#{node[:tomcat][:app_name]}-server.war /opt/tomcat/webapps/
+#        /etc/init.d/tomcat restart
+#        EOF
+#    end
+#end
 
 case node.chef_environment
 when '_dev'
     environment = 'dev'
 when '_default'
+    environment = 'prod'
+when '_prod_'
     environment = 'prod'
 when '_stage'
     environment = 'stage'
