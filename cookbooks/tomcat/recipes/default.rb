@@ -225,7 +225,7 @@ when '_dev'
     environment = 'dev'
 when '_default'
     environment = 'prod'
-when '_prod_'
+when /_production_/
     environment = 'prod'
 when '_stage'
     environment = 'stage'

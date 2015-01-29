@@ -103,7 +103,8 @@ html_strategy cgi
 server_types = [ 
     [@applications, 'Applications'],
     [@load_balancers, 'LoadBalancers'],
-    [@databases, 'DataBases']
+    [@databases, 'DataBases'],
+    [@redis, 'Redis']
 ]
 
 server_types. each do |servers, label| 

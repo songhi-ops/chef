@@ -45,7 +45,13 @@
             "700-mongo-monitoring": {
               "rule": "--protocol tcp --dport 28019 --match state --state NEW --jump ACCEPT"
             },
-            "800-mongo-monitoring": {
+            "800-redis": {
+              "rule": "--protocol tcp --dport 6379 --match state --state NEW --jump ACCEPT"
+            },
+            "900-redis-sentinel": {
+              "rule": "--protocol tcp --dport 26379 --match state --state NEW --jump ACCEPT"
+            },
+            "1000-mongo-monitoring": {
               "rule": "--protocol tcp --dport 3000 --match state --state NEW --jump ACCEPT"
             },
             "default": "DROP [0:0]"
@@ -73,7 +79,13 @@
     "recipe[users::sysadmins]",
     "recipe[sudo]",
     "recipe[munin::client]",
-    "recipe[nagios::client]"
+    "recipe[nagios::client]",
+    "recipe[hosts]",
+    "recipe[redisio]",
+    "recipe[redisio::enable]",
+    "recipe[redisio::sentinel]",
+    "recipe[redisio::sentinel_enable]"
+
   ],
   "env_run_lists": {
 
