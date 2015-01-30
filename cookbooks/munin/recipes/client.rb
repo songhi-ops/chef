@@ -32,6 +32,32 @@ if node.recipes.include? 'nginx'
     end
 end
 
+if node.recipes.include? 'redisio'
+    gem_package 'redis' do
+        action :install
+    end
+
+    for plugin in ['redis_changes_since_last_save_', "redis_commands_", "redis_connections_","redis_databases_","redis_memory_","redis_users_", "resque_failed_","resque_queues_", "resque_workers_"]
+        cookbook_file "/usr/share/munin/plugins/#{plugin}" do
+            owner "root"
+            group "root"
+            source "#{plugin}"
+            mode 0755
+        end
+
+
+        link "/etc/munin/plugins/#{plugin}" do
+            to "/usr/share/munin/plugins/#{plugin}"
+            notifies :restart, 'service[munin-node]'
+        end
+
+    end
+
+    
+    
+end
+
+
 service 'munin-node' do
   service_name "munin-node"
   supports :restart => true, :status => true
