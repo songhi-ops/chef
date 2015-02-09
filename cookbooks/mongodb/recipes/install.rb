@@ -362,15 +362,15 @@ package "xfsprogs" do
   action :install
 end
 
-if not node['mongodb']['standalone']
-    if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm")     
-        remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
-            source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+if node.chef_environment == '_default' or node.chef_environment =~ /_production_/
+    if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.9.0.164-1.x86_64.rpm")     
+        remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.9.0.164-1.x86_64.rpm" do
+            source "https://mms.mongodb.com/download/agent/monitoring/mongodb-mms-monitoring-agent-2.9.0.164-1.x86_64.rpm"
             action :create
         end
         
-        rpm_package "mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm" do
-            source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.3.1.89-1.x86_64.rpm"
+        rpm_package "mongodb-mms-monitoring-agent-2.9.0.164-1.x86_64.rpm" do
+            source "#{Chef::Config[:file_cache_path]}/mongodb-mms-monitoring-agent-2.9.0.164-1.x86_64.rpm"
             action :install
         end
     end
@@ -391,14 +391,14 @@ if not node['mongodb']['standalone']
     end
     
     if node['mongodb']['backup']
-        if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm") 
-            remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm" do
-                source "https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm"
+        if not File.exist?("#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-3.0.0.246-1.x86_64.rpm") 
+            remote_file "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-3.0.0.246-1.x86_64.rpm" do
+                source "https://mms.mongodb.com/download/agent/backup/mongodb-mms-backup-agent-3.0.0.246-1.x86_64.rpm"
                 action :create
             end
             
-            rpm_package "mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm" do
-                source "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-2.4.0.156-1.x86_64.rpm"
+            rpm_package "mongodb-mms-backup-agent-3.0.0.246-1.x86_64.rpm" do
+                source "#{Chef::Config[:file_cache_path]}/mongodb-mms-backup-agent-3.0.0.246-1.x86_64.rpm"
                 action :install
             end
         end

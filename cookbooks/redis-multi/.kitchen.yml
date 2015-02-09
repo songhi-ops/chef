@@ -1,0 +1,54 @@
+---
+driver:
+  name: vagrant
+
+driver_config:
+  require_chef_omnibus: true
+
+provisioner:
+  name: chef_zero
+  client_rb:
+    environment: dev
+  attributes:
+    cloud:
+      public_ipv4: '127.0.0.1'
+    authorization:
+      sudo:
+        users: ['vagrant']
+        passwordless: true
+    platformstack:
+      cloud_backup:
+        enabled: false
+      cloud_monitoring:
+        enabled: false
+    rackspace:
+      cloud_credentials:
+        username: 'racker'
+        api_key: 'sekrit'
+
+platforms:
+  - name: centos-6.5
+  - name: ubuntu-12.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[redis-multi::single]
+      - recipe[redis-multi]
+      - recipe[redis-multi::enable]
+
+  - name: master
+    run_list:
+      - recipe[redis-multi::master]
+      - recipe[redis-multi]
+      - recipe[redis-multi::enable]
+  - name: slave
+    run_list:
+      - recipe[redis-multi::slave]
+      - recipe[redis-multi]
+      - recipe[redis-multi::enable]
+  - name: sentinel
+    run_list:
+      - recipe[redis-multi::sentinel]
+      - recipe[redis-multi::sentinel_default]
+      - recipe[redis-multi::sentinel_enable]

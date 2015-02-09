@@ -72,25 +72,32 @@ cookbook_file "/etc/nagios/objects/commands.cfg" do
 end
 
 server_types = [
-    [ 'applications', 'role:magic-app' ],
-    [ 'load_balancers', 'role:magic-load-balancer' ],
-    [ 'data_bases', 'role:magic-mongodb-shard' ],
-    [ 'data_bases_replica', 'role:magic-mongodb-replica' ],
-    [ 'data_bases_config', 'role:magic-mongodb-config' ]
+    [ 'applications', "role:#{node[:nagios][:app_name]}-app" ],
+    [ 'load_balancers', "role:#{node[:nagios][:app_name]}-load-balancer" ],
+    [ 'data_bases', "role:#{node[:nagios][:app_name]}-mongodb-shard" ],
+    [ 'data_bases_replica', "role:#{node[:nagios][:app_name]}-mongodb-replica" ],
+    [ 'data_bases_config', "role:#{node[:nagios][:app_name]}-mongodb-config" ]
 ]
 
+bash 'remove old config files' do
+    code <<-EOF
+    rm -f /etc/nagios/conf.d/*
+    EOF
+end
 
 server_types.each do | servers | 
     search(:node, servers[1], %w(ipaddress hostname cpu)).each do | server |
-    template "/etc/nagios/conf.d/#{server[:hostname]}.cfg" do
-            source "#{servers[0]}.cfg.erb"  
-            variables ({
-                'hostname' => server[:hostname],
-                'ipaddress' => server[:ipaddress],
-                'cores' => server[:cpu][:total]
-            
-            })
-            notifies :reload, 'service[nagios]'
+    unless server.nil?
+        template "/etc/nagios/conf.d/#{server[:hostname]}.cfg" do
+                source "#{servers[0]}.cfg.erb"  
+                variables ({
+                    'hostname' => server[:hostname],
+                    'ipaddress' => server[:ipaddress],
+                    'cores' => server[:cpu][:total]
+                
+                })
+                notifies :reload, 'service[nagios]'
+            end
         end
     end
 end
@@ -135,7 +142,7 @@ bash "removing sendmail" do
     EOF
 end
 
-if node.chef_environment == "_default"
+if node.chef_environment == "_default" or /_production_/ =~ node.chef_environment
     cookbook_file "/etc/nagios/objects/contacts.cfg" do
         owner 'root'
         group 'root'

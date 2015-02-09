@@ -6,11 +6,14 @@
   "groups_dev": [
     "sysadmins", "developers"
   ],
+  "groups_production_diamond": [
+    "sysadmins", "developers"
+  ],
   "groups_stage": [
     "sysadmins", "developers"
   ],
   "ssh_keys": [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQ/2UXYiEUTDAE0DdPh4Yh0Sgjo/WCq/1VdX4mxY2tIm7VRHUJqeo2ERU9b+7O2cRX8sds74JOHH/+U6hYlGU2R9T5mY7rBfjs2n0Pk5mz6V6nSD7rLIH7565CML0HAF/3d+/pP+x0ZaCitv208aL1oYHd3o8SN3f+FFndsOrNjTuCRgkZXCPkC165/IplvyjcK2O0c/WN5IjSFOZw1qTeQbn52ma6PHhh9I5TuN81oQ3UwBHqS03XoL47h4PdVyjA1w7LWN4Xi99L0dIi1XjKljPS8fVwF/aTI6XRLIIbgnLYDjToXiIzRY7UBPwnc50WnSkISgBqWZ7HDKSHu1uD"
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfI1hvULk6jJMg4CKM1UyWOJK1gDZN1r33eDhNRKQiBCENsrLNfyoXKq149nJihVgEcM+L8XJpukDNad2Le04PmQ6u3JIxZAqu2hbIBt8eycw2qUY3SqcN4Ip45JOpRNTxBtACgwXoeRvhl0zAXYhpugeR07LGLNXcX+KjOPTKHVxAtoj1zY1sXornOBACnTsGy2lhi1w0nPWAsO1Zez5hQbcrMqHKPr6FX/ExnDCoqIRKNl/a6i6TAFGqZBANmH+vJm1MX5njtt50vFCpEgZkOQJJWw8gn3AWmKjuhWpRfwZixODNRfA8XnbXiGEhC9JafGGH/VDy/m8dcXUV4ZFn adrian@adrian-VirtualBox"
   ],
   "shell": "/bin/bash",
   "password": "$1$o0sf6Hiq$d0QG0sJZCIoYW.HO4FetJ."

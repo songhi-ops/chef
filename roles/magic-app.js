@@ -85,7 +85,8 @@
     "recipe[users::sysadmins]",
     "recipe[sudo]",
     "recipe[munin::client]",
-    "recipe[nagios::client]"
+    "recipe[nagios::client]",
+    "recipe[graylog2::tomcat]"
   ],
   "env_run_lists": {
   },
