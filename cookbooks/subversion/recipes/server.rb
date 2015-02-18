@@ -48,10 +48,22 @@ end
 repo_list = []
 search(:svn_repos, "*:*", %w(id)).each do |encrypted|
     repo = Chef::EncryptedDataBagItem.load("svn_repos", encrypted['id'])
-    repo_list << [repo['id'],repo['users']]
+    repo_list << [repo['id'],repo['groups']]
+
 
     group "svn_#{repo['id']}" do
       action :create
+    end
+
+    users_manage "svn_#{repo['id']}" do
+      action [ :remove, :create ]
+    end
+
+    Chef::Log.warn("AAAAADING: #{node['apache']['user']} to svn_#{repo['id']} ")
+    group "svn_#{repo['id']}" do
+      action :modify
+      members ["#{node['apache']['user']}"]
+      append true
     end
 
     execute 'svnadmin create repo' do
@@ -67,22 +79,22 @@ search(:svn_repos, "*:*", %w(id)).each do |encrypted|
         EOF
     end
 
-    Chef::Log.warn("EEEEEEE #{repo['id']}")
+    #Chef::Log.warn("EPALELELELEL #{repo['id']}")
 
-    users_manage "svn_#{repo['id']}" do
-      action [ :remove, :create ]
-    end
     
 
-    repo['users'].each do |user|
-        execute 'create htpasswd file' do
-            command "htpasswd -sb #{node['subversion']['repo_dir']}/htpasswd #{user['username']} #{user['password']}"
+    repo['groups'].each do |group|
+        group['users'].each do |user|
+            execute 'create htpasswd file' do
+                command "htpasswd -sb #{node['subversion']['repo_dir']}/htpasswd #{user['username']} #{user['password']}"
+            end
         end
     end
 
 end
 
 
+Chef::Log.warn("AAAAA: #{repo_list}")
 template "#{node['subversion']['repo_dir']}/svn-access-file" do
     source "svn-access-file.erb"
     owner "root"
@@ -91,6 +103,7 @@ template "#{node['subversion']['repo_dir']}/svn-access-file" do
     variables ({
         :repo_list => repo_list 
     })
+    notifies :restart, 'service[httpd]'
 end
 
 execute 'create htpasswd file' do
@@ -98,4 +111,11 @@ execute 'create htpasswd file' do
 end
 
 
+service 'httpd' do
+  service_name "httpd"
+  supports :restart => true, :status => true
+  action [:start, :enable]
+  retries 4
+  retry_delay 30
+end
 

@@ -2,22 +2,32 @@
 [groups]
 <% 
 @repo_list.each do |repo|
-    users = repo[1][0]["username"]
-    size = repo[1].length - 1
-    repo[1][1..size].each do |user|
-        users = users + ', ' + user["username"]
-    end
+    repo[1].each do |group|
+        users = group["users"][0]["username"]
+        size = group["users"].length - 1
+        group["users"][1..size].each do |user|
+            users = users + ', ' + user["username"]
+        end
+    
 %>
-<%= repo[0] %> = <%= users %>
+<%= repo[0] %>-<%=group["directory"]%> = <%= users %>
 <%
-    users = ''
+        users = ''
+    end
 end%>
 
 <%
 @repo_list.each do |repo|
+    repo[1].each do |group|
+        if group["directory"] == "all"
+            dir = "/"
+        else
+            dir = "/#{group["directory"]}"
+        end
 %>
-[<%= repo[0] %>:/]
-@<%= repo[0] %> = rw
+[<%= repo[0] %>:<%= dir %>]
+@<%= repo[0] %>-<%= group["directory"] %> = rw
 <%= %>
-<% end %>
+<% end
+end %>
 
