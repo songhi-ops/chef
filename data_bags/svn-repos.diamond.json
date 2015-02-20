@@ -1,8 +1,8 @@
 {
   "id": "diamond",
-  "users": {
-    "encrypted_data": "idVtIgUTGcZTXMl06oFD6/lJc03WZFvj6RZN7kecxnDZ8lT/4hOzuDlIIFKv\n0oOR3p7XEAy/zoy/SrA+gBcvKOYCTgPcAIKGlhhJxoReuS0=\n",
-    "iv": "2AqYP6OjE/AGdTjKRN6f0A==\n",
+  "groups": {
+    "encrypted_data": "Z0W+GWc/yBZwnE4n1TbTj1KYYEX0R32FLUfTkmzc8dx+bidpaQ3O4aitEBJI\nLQLRuNTWSzrbi8BHSGkT1U0a9csfPybJP1FUldbyI+L+YFmyiEA/qDTli5vN\nzh4AM2aKYJ2+NsY+PGev8rvLN/UNtg==\n",
+    "iv": "UbHlenmTbdY7+EAOPjEUBQ==\n",
     "version": 1,
     "cipher": "aes-256-cbc"
   }
