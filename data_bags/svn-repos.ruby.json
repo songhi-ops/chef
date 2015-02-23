@@ -1,8 +1,8 @@
 {
   "id": "ruby",
-  "users": {
-    "encrypted_data": "fMT/Lt6wXn5qBqBryn7SE37I/4tikXe+4mRRN6eP0Mg6CnjyB04NilY8eSu5\nnkI/6u/joRSYtnNyTAC12ZQ8ACGiLEq6/D7qS9eLpK3Aa4w=\n",
-    "iv": "gZ0W7Ce47kTYWyqZppoFMQ==\n",
+  "groups": {
+    "encrypted_data": "FBXbDhkDiGvTIMcJR4Hp2abhUH/teP7/nttcRSj/uysZ4b73PBB0mG9iY4OX\ngIc1Q5AlQyhrlNCJF0u1LAcya1Y/8NeX75thN4nj1H0ZlfF0n1DhCO1mebRz\nhC4c3F/Oe4L+YfewOtKofiwsQWmveA==\n",
+    "iv": "D3Saq7UchAzdhvrP+UG4EA==\n",
     "version": 1,
     "cipher": "aes-256-cbc"
   }
