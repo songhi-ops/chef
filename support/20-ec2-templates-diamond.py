@@ -4,7 +4,6 @@ from boto.ec2.blockdevicemapping import BlockDeviceType, BlockDeviceMapping
 import boto.ec2
 
 pem_key='diamond-prod.pem'
-chef_server='10.0.0.74'
 
 type_t1_micro = 't1.micro'
 type_m3_xlarge = 'm3.xlarge'
@@ -171,6 +170,7 @@ THIS ONE SHOULD WORK
 """
 template_mongo_config_east_1a_paravirtual_no_iops  = deepcopy(template_mongo_config_east_1a_paravirtual_3500iops)
 template_mongo_config_east_1a_paravirtual_no_iops['image_id'] = 'ami-4e910e26'
+template_mongo_config_east_1a_paravirtual_no_iops['instance_type'] = 'm3.large'
 
 """
 # LB templates
@@ -207,3 +207,21 @@ template_application_east_1a = {
 
 template_application_east_1c = deepcopy(template_application_east_1a)
 template_application_east_1c['region'] = region_us_east_1c_private
+
+template_redis_east_1a = {
+        'image_id' : 'ami-e64e308e',
+        'key_name' : 'diamond-prod',
+        'instance_type' : 'm3.large',
+        'security_group_ids' : ['sg-0cbd6d68'],
+        'region' : region_us_east_1a_private,
+        'ebs_optimized' : False
+        }
+
+template_redis_east_1c = {
+        'image_id' : 'ami-e64e308e',
+        'key_name' : 'diamond-prod',
+        'instance_type' : 'm3.large',
+        'security_group_ids' : ['sg-0cbd6d68'],
+        'region' : region_us_east_1c_private,
+        'ebs_optimized' : False
+        }

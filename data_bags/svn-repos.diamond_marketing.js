@@ -1,8 +1,8 @@
 {
   "id": "diamond_marketing",
-  "users": {
-    "encrypted_data": "yLDw4ETdpy9/FWl8wzZM1KtH0s8cPlTSOcoyYUfzOiH5YQSBCPODC9vfH0Zj\nAeF1gd7sgOTZGxCAJzCqNB7mMsGPRyVgC2pPHwxQHfb4jQs=\n",
-    "iv": "btO6LjMaErvHR2/V5LZR8A==\n",
+  "groups": {
+    "encrypted_data": "JwgH14zypi4cRaE05LJcI89rMiz0GywslFZhT60CH9vMY42AflStoZDclbL2\nRLMjxwfQYvUOCWUTZZFzSJzw4LimZygPDEgkY0Gj5yAmJEGGjHhsrapLH6i1\n1MZnsDvPTTP/A2ZmKqTJzkwaQT2Kjw==\n",
+    "iv": "ncf3AoywV4iPwnjeMYYrZA==\n",
     "version": 1,
     "cipher": "aes-256-cbc"
   }
