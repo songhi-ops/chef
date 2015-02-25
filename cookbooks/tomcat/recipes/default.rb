@@ -59,7 +59,7 @@ directory "/logs/tomcat" do
 end
 
 
-directory "#{node[:tomcat][:log_directory]}/#{node[:tomcat][:app_name]}" do
+directory "#{node[:tomcat][:log_directory]}/#{node[:songhi][:app_name]}" do
   owner "tomcat"
   group "tomcat"
   mode 00644
@@ -86,11 +86,11 @@ if !File.symlink?("#{node[:tomcat][:log_directory_old]}")
     end
 end
 
-link "/var/log/#{node[:tomcat][:app_name]}" do
+link "/var/log/#{node[:songhi][:app_name]}" do
     owner 'tomcat'
     group 'tomcat'
     mode 0755
-    to "#{node[:tomcat][:log_directory]}/#{node[:tomcat][:app_name]}"
+    to "#{node[:tomcat][:log_directory]}/#{node[:songhi][:app_name]}"
 end
 
 
@@ -214,7 +214,7 @@ end
 #    servers = search(:node, "#{node[:tomcat][:role_stage]}", %w(ipaddress, fqdn))
 #    bash "Get the build" do
 #        code <<-EOF
-#        scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/#{node[:tomcat][:app_name]}-server.war /opt/tomcat/webapps/
+#        scp -i /root/id_rsa root@#{servers[0][:ipaddress]}:/opt/tomcat/webapps/#{node[:songhi][:app_name]}-server.war /opt/tomcat/webapps/
 #        /etc/init.d/tomcat restart
 #        EOF
 #    end

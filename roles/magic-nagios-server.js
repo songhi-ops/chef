@@ -3,6 +3,9 @@
   "description": "",
   "json_class": "Chef::Role",
   "default_attributes": {
+    "songhi" : {
+        "app_name" : "magic"
+    }
   },
   "override_attributes": {
   },

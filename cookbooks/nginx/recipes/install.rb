@@ -12,7 +12,7 @@ end
 
 hosts     = {}
 
-search(:node, "role:#{node[:nginx][:app_name]}-app", %w(ipaddress fqdn dns_aliases)) do |n|
+search(:node, "role:#{node[:songhi][:app_name]}-app", %w(ipaddress fqdn dns_aliases)) do |n|
   hosts[n["ipaddress"]] = n
 end
 

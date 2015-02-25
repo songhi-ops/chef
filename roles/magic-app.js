@@ -9,6 +9,9 @@
       "standalone": false,
       "mongos": true
     },
+    "songhi" : {
+        "app_name" : "magic"
+    },
     "ulimit": {
       "users": {
         "mongod": {

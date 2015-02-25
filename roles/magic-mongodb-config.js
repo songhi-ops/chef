@@ -28,6 +28,9 @@
         }
       }
     },
+    "songhi" : {
+        "app_name" : "magic"
+    },
     "mongodb": {
       "configsrv": true,
       "arbiter": true,

@@ -72,11 +72,11 @@ cookbook_file "/etc/nagios/objects/commands.cfg" do
 end
 
 server_types = [
-    [ 'applications', "role:#{node[:nagios][:app_name]}-app" ],
-    [ 'load_balancers', "role:#{node[:nagios][:app_name]}-load-balancer" ],
-    [ 'data_bases', "role:#{node[:nagios][:app_name]}-mongodb-shard" ],
-    [ 'data_bases_replica', "role:#{node[:nagios][:app_name]}-mongodb-replica" ],
-    [ 'data_bases_config', "role:#{node[:nagios][:app_name]}-mongodb-config" ]
+    [ 'applications', "role:#{node[:songhi][:app_name]}-app" ],
+    [ 'load_balancers', "role:#{node[:songhi][:app_name]}-load-balancer" ],
+    [ 'data_bases', "role:#{node[:songhi][:app_name]}-mongodb-shard" ],
+    [ 'data_bases_replica', "role:#{node[:songhi][:app_name]}-mongodb-replica" ],
+    [ 'data_bases_config', "role:#{node[:songhi][:app_name]}-mongodb-config" ]
 ]
 
 bash 'remove old config files' do

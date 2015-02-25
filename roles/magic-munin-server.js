@@ -3,12 +3,9 @@
   "description": "",
   "json_class": "Chef::Role",
   "default_attributes": {
-      "munin": {
-      "app_name": "diamond"
-      },
-      "nagios": {
-      "app_name": "diamond"
-      }
+    "songhi" : {
+        "app_name" : "magic"
+    }
   },
   "override_attributes": {
   },

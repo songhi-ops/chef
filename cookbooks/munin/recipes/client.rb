@@ -1,10 +1,10 @@
 package 'munin-node'
 
-if node.run_list.roles.include?("#{node[:munin][:app_name]}-app")
+if node.run_list.roles.include?("#{node[:songhi][:app_name]}-app")
     package 'munin-java-plugins'
 end
 
-servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:munin][:app_name]}-munin-server", %w(ipaddress, fqdn))
+servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:songhi][:app_name]}-munin-server", %w(ipaddress, fqdn))
 template "/etc/munin/munin-node.conf" do
     source "munin-node.conf.erb"
     variables({
@@ -67,8 +67,8 @@ service 'munin-node' do
 end
 
 
-if node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-shard") or node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-config") or node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-replica")
-    if node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-shard") or node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-replica")
+if node.run_list.roles.include?("#{node[:songhi][:app_name]}-mongodb-shard") or node.run_list.roles.include?("#{node[:songhi][:app_name]}-mongodb-config") or node.run_list.roles.include?("#{node[:songhi][:app_name]}-mongodb-replica")
+    if node.run_list.roles.include?("#{node[:songhi][:app_name]}-mongodb-shard") or node.run_list.roles.include?("#{node[:songhi][:app_name]}-mongodb-replica")
         port_api = '28018'
     else
         port_api = '28019'
@@ -90,7 +90,7 @@ if node.run_list.roles.include?("#{node[:munin][:app_name]}-mongodb-shard") or n
     end
 end
 
-if node.run_list.roles.include?("#{node[:munin][:app_name]}-load-balancer")
+if node.run_list.roles.include?("#{node[:songhi][:app_name]}-load-balancer")
     python_pip "requests"
 
     cookbook_file "/usr/share/munin/plugins/response_time" do
