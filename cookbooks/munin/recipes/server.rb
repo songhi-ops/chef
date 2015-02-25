@@ -12,10 +12,10 @@ package "munin"
 package "munin-cgi"
 
 
-applications = search(:node, "role:#{node[:munin][:app_name]}-app", %w(ipaddress fqdn))
-load_balancers = search(:node, "role:#{node[:munin][:app_name]}-load-balancer", %w(ipaddress fqdn))
-databases = search(:node, "role:#{node[:munin][:app_name]}-mongodb*", %w(ipaddress fqdn))
-redis = search(:node, "role:#{node[:munin][:app_name]}-redis*", %w(ipaddress fqdn))
+applications = search(:node, "role:#{node[:songhi][:app_name]}-app", %w(ipaddress fqdn))
+load_balancers = search(:node, "role:#{node[:songhi][:app_name]}-load-balancer", %w(ipaddress fqdn))
+databases = search(:node, "role:#{node[:songhi][:app_name]}-mongodb*", %w(ipaddress fqdn))
+redis = search(:node, "role:#{node[:songhi][:app_name]}-redis*", %w(ipaddress fqdn))
 
 template "/etc/munin/munin.conf" do
     source "munin.conf.erb"

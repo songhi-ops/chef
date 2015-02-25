@@ -21,6 +21,9 @@
         }
       }
     },
+    "songhi" : {
+        "app_name" : "magic"
+    },
     "iptables-ng": {
       "rules": {
         "filter": {

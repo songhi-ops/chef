@@ -42,6 +42,9 @@
         }
       }
     },
+    "songhi" : {
+        "app_name" : "magic"
+    },
     "ulimit": {
       "users": {
         "nginx": {

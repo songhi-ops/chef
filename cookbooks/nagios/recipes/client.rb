@@ -10,8 +10,8 @@ plugins = [
 ]
 
 
-Chef::Log.warn("HEEEY: #{node[:nagios][:app_name]}")
-servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:nagios][:app_name]}-nagios-server", %w(ipaddress, fqdn))
+Chef::Log.warn("HEEEY: #{node[:songhi][:app_name]}")
+servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:songhi][:app_name]}-nagios-server", %w(ipaddress, fqdn))
 template "/etc/nagios/nrpe.cfg" do
     source "nrpe.cfg.erb"
     variables({
@@ -30,7 +30,7 @@ plugins.each do | plugin |
 end
 
 
-if node.run_list.roles.include?("#{node[:nagios][:app_name]}-app") 
+if node.run_list.roles.include?("#{node[:songhi][:app_name]}-app") 
     python_pip "requests"
 end
 
