@@ -46,7 +46,7 @@
     "ulimit": {
       "users": {
         "nginx": {
-          "filehandle_limit": "unlimited"
+          "filehandle_limit": 1048576
         }
       }
     },
