@@ -39,19 +39,14 @@
         }
       }
     },
-    "nginx":{
+    "songhi":{
         "app_name" : "diamond"
     },
-    "munin":{
-        "app_name" : "diamond"
-    },
-    "nagios":{
-        "app_name" : "diamond"
-    },
+    
     "ulimit": {
       "users": {
         "nginx": {
-          "filehandle_limit": 65000
+          "filehandle_limit": "unlimited"
         }
       }
     },
