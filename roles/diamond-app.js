@@ -12,12 +12,12 @@
     "ulimit": {
       "users": {
         "mongod": {
-          "filehandle_limit": 65000,
+          "filehandle_limit": 1048576,
           "process_limit": "unlimited"
         },
         "tomcat": {
-          "filehandle_limit": 65000,
-          "process_limit": 65000
+          "filehandle_limit": 1048576,
+          "process_limit": "unlimited"
 
         }
       }
