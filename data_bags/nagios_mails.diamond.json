@@ -1,0 +1,15 @@
+{
+  "id": "diamond",
+  "mail": {
+    "encrypted_data": "iER+014aCY7UIjIo6jtM+VR/65FhEKa2qBhwdEOTiu3PmTlfR+fA3L+48irM\nLLBq\n",
+    "iv": "KlsuOuRGVMYTEb8j/75nIA==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  },
+  "password": {
+    "encrypted_data": "ASNXNfJX0DOcIPg2H0s6MbPPgilI8DcjzuP+XVs7xgfMWBzh4+JZiUsrqCpY\nLEJL\n",
+    "iv": "cHfc7CDyTEirve3aj0Bslw==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "magic",
+  "mail": {
+    "encrypted_data": "AkyvtlQOBP7EksCaaplmFuy0eyep/hkkgWBl4TuzR1Ae4ICSAy2IF48x3AXv\npTPe\n",
+    "iv": "IDXsEOZR0mUTPmTdPWgkGA==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  },
+  "password": {
+    "encrypted_data": "1ATpDuH/vDVJrgm5/uV7gHORfSfOAIlsO2pKUsv2+m4XqV++mEfCHX6Y9DSV\nODB/\n",
+    "iv": "FC3j/YrtT/5g5FuDX13CWA==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}
