@@ -7,7 +7,7 @@
     "sysadmins", "developers"
   ],
   "groups_production_diamond": [
-    "sysadmins", "developers"
+    "developers"
   ],
   "groups_stage": [
     "sysadmins", "developers"
