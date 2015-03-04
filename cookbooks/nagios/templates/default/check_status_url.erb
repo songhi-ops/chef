@@ -1,0 +1,26 @@
+#!/usr/bin/python
+
+import sys
+import requests
+import os
+import math
+import json
+
+url = '<%= @status_url %>'
+
+try :
+    r = requests.get(url, timeout=3)
+    j = json.loads(r.content.replace("'", "\""))
+    if j['ok'] == True :
+        print 'OK, version: ' + j['version']
+        sys.exit(0)
+    else :
+        print 'Critical: ' + url + ' did not respond ok'
+        sys.exit(2)
+
+except Exception as e:
+    print 'Critical: ' + url + ' timed out'
+    sys.exit(2)
+
+
+

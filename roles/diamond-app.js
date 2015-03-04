@@ -30,7 +30,7 @@
         "app_name": "diamond"
     },
     "nagios": {
-        "app_name": "diamond"
+        "status_url" : "http://localhost:8080/diamond-server/rest/status"
     },
     "iptables-ng": {
       "rules": {
