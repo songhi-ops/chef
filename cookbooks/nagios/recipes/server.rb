@@ -130,7 +130,7 @@ end
 mail = Chef::EncryptedDataBagItem.load("nagios_mails", "#{node[:songhi][:app_name]}")
 
 template "/etc/ssmtp/ssmtp.conf" do
-        source "ssmtp.cfg.erb"  
+        source "ssmtp.conf.erb"  
         variables ({
             'mail' => mail['mail'],
             'password' => mail['password']
