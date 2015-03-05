@@ -127,12 +127,17 @@ service "sendmail" do
 end
 
 
-cookbook_file "/etc/ssmtp/ssmtp.conf" do
-    owner 'root'
-    group 'root'
-    source 'ssmtp.conf'
-    mode 0644
+mail = Chef::EncryptedDataBagItem.load("nagios_mails", "#{node[:songhi][:app_name]}")
+
+template "/etc/ssmtp/ssmtp.conf" do
+        source "ssmtp.conf.erb"  
+        variables ({
+            'mail' => mail['mail'],
+            'password' => mail['password']
+        
+        })
 end
+
 
 
 bash "removing sendmail" do
@@ -143,12 +148,13 @@ bash "removing sendmail" do
 end
 
 if node.chef_environment == "_default" or /_production_/ =~ node.chef_environment
-    cookbook_file "/etc/nagios/objects/contacts.cfg" do
-        owner 'root'
-        group 'root'
-        source 'contacts.cfg'
-        mode 0644
-        notifies :reload, 'service[nagios]'
-    end
+        template "/etc/nagios/objects/contacts.cfg" do
+                source "contacts.cfg.erb"  
+                variables ({
+                    'application' => "#{node[:songhi][:app_name]}"
+                
+                })
+                notifies :reload, 'service[nagios]'
+            end
 end
 
