@@ -218,6 +218,7 @@ command[check_memcached]=/usr/lib64/nagios/plugins/check_memcached -H localhost
 command[check_nginx]=/usr/lib64/nagios/plugins/check_nginx -N -P 8090
 command[check_postgres]=/usr/lib64/nagios/plugins/check_database_pgsql
 command[check_redis]=/usr/lib64/nagios/plugins/check_redis -H localhost
+command[check_redis_sentinel]=/usr/lib64/nagios/plugins/check_redis -H localhost -p 26379
 command[check_kannel]=/usr/lib64/nagios/plugins/check_kannel
 command[check_replication]=/usr/lib64/nagios/plugins/check_pg_streaming_replication
 command[check_errors]=/usr/lib64/nagios/plugins/check_error_log '$ARG1$' $ARG2$

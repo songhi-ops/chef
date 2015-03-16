@@ -1,3 +1,5 @@
+
+
 package "nagios-plugins-all"
 package "nrpe"
 
@@ -5,12 +7,13 @@ plugins = [
     "check_api",
     "check_memory",
     "check_nginx",
-    "check_mongodb"
+    "check_mongodb",
+    "check_redis"
 ]
 
 application = "#{node[:songhi][:app_name]}"
 Chef::Log.warn("HEEEY: #{application}")
-Chef::Log.warn("HEEEY: #{node[:nagios]}")
+Chef::Log.warn("HEEEY: #{node.run_list.roles}")
 
 servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:songhi][:app_name]}-nagios-server", %w(ipaddress, fqdn))
 template "/etc/nagios/nrpe.cfg" do
@@ -30,24 +33,38 @@ plugins.each do | plugin |
     end
 end
 
-######Template plugins:
 
 
-template "/usr/lib64/nagios/plugins/check_status_url" do
-        source "check_status_url.erb"  
-        variables ({
-            'status_url' => "#{node[:nagios][:status_url]}"
-        
-        })
-        notifies :reload, 'service[nrpe]'
-    end
 
 ######
 #
 if node.run_list.roles.include?("#{node[:songhi][:app_name]}-app") 
     python_pip "requests"
+    template "/usr/lib64/nagios/plugins/check_status_url" do
+            source "check_status_url.erb"  
+            variables ({
+                'status_url' => "#{node[:nagios][:status_url]}"
+            
+            })
+            notifies :reload, 'service[nrpe]'
+    end
 end
 
+
+if node.run_list.roles.include?("#{node[:songhi][:app_name]}-redis-master") or node.run_list.roles.include?("#{node[:songhi][:app_name]}-redis-slave")
+    include_recipe 'cpan::bootstrap'
+
+    cpan_client 'Bundle::CPAN' do
+        action 'install'
+        install_type 'cpan_module'
+    end
+
+    cpan_client 'Redis' do
+        action 'install'
+        install_type 'cpan_module'
+    end
+
+end
 
 service 'nrpe' do
   service_name "nrpe"

@@ -56,6 +56,7 @@
     "recipe[redisio::sentinel]",
     "recipe[redisio::sentinel_enable]",
     "recipe[munin::client]",
+    "recipe[nagios::client]",
     "recipe[iptables-ng]"
 
   ],

@@ -76,7 +76,9 @@ server_types = [
     [ 'load_balancers', "role:#{node[:songhi][:app_name]}-load-balancer" ],
     [ 'data_bases', "role:#{node[:songhi][:app_name]}-mongodb-shard" ],
     [ 'data_bases_replica', "role:#{node[:songhi][:app_name]}-mongodb-replica" ],
-    [ 'data_bases_config', "role:#{node[:songhi][:app_name]}-mongodb-config" ]
+    [ 'data_bases_config', "role:#{node[:songhi][:app_name]}-mongodb-config" ],
+    [ 'redis', "role:#{node[:songhi][:app_name]}-redis-master"],
+    [ 'redis', "role:#{node[:songhi][:app_name]}-redis-slave"],
 ]
 
 bash 'remove old config files' do
