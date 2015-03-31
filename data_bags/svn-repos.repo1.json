@@ -1,9 +1,0 @@
-{
-  "id": "repo1",
-  "users": {
-    "encrypted_data": "5iWl9lsZWI/duCRLRpgvoUZI/LDc0fWKyZckadYnWO+6hqPdBIN31c6eu+v8\nPt13VL1RSGyBLhQinWvD413ywOtdT8YP2r1f3WH/6tDAxkM=\n",
-    "iv": "g6OehXRgDFellAmcCRlgpw==\n",
-    "version": 1,
-    "cipher": "aes-256-cbc"
-  }
-}

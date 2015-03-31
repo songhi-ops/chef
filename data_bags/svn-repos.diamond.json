@@ -1,9 +1,0 @@
-{
-  "id": "diamond",
-  "groups": {
-    "encrypted_data": "Z0W+GWc/yBZwnE4n1TbTj1KYYEX0R32FLUfTkmzc8dx+bidpaQ3O4aitEBJI\nLQLRuNTWSzrbi8BHSGkT1U0a9csfPybJP1FUldbyI+L+YFmyiEA/qDTli5vN\nzh4AM2aKYJ2+NsY+PGev8rvLN/UNtg==\n",
-    "iv": "UbHlenmTbdY7+EAOPjEUBQ==\n",
-    "version": 1,
-    "cipher": "aes-256-cbc"
-  }
-}
