@@ -79,7 +79,7 @@ search(:svn_repos, "*:*", %w(id)).each do |encrypted|
         EOF
     end
 
-    #Chef::Log.warn("EPALELELELEL #{repo['id']}")
+    Chef::Log.warn("EPALELELELEL #{repo['id']}")
 
     
 
