@@ -1,0 +1,23 @@
+{
+  "id": "simo",
+  "groups_default": [
+    "svn_ruby",
+    "svn_diamond",
+    "svn_songhi_schools"
+  ],
+  "groups_dev": [
+    "svn_ruby",
+    "svn_diamond",
+    "svn_songhi_schools"
+  ],
+  "groups_stage": [
+    "svn_ruby",
+    "svn_diamond",
+    "svn_songhi_schools"
+  ],
+  "ssh_keys": [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDP8n2dlYE1FC91jygr4iL5XfuE9edEA7jYte1IQG/21YGlr0eDZD+sK8LX5HwsRLg90rAeks0Wt8afI7ldzamwWuLqeLnNBgsZVC2MgCKSU8l9gAAbGJAugMvrv2gOEyb8D7xMMCHCGwcolOjsKPkyEuZFXapFWHMsBN9J2d/RufLan5ID7GWThdcpOgKpWZpO2Wi60DwtfOrpw9V6M04H5vM3VhfPaJgkCJC7QngoVhnRn1dIb7QcxDzSNHpqF++gQPm9hhT89kpPiIiFz8ybH7fCRXWnkJqmKGY0GhktMnBOboE0pvBKjWuLt+7NncpUHpBxsAsSJVFsUIY2yclx"
+  ],
+  "shell": "/bin/bash",
+  "password": "$1$jlzQba5n$uIycChTxCKgc4r7Yiw.w0/"
+}
