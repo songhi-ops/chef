@@ -5,6 +5,7 @@ pem_key='operations.pem'
 
 type_t1_micro = 't1.micro'
 type_m3_xlarge = 'm3.xlarge'
+type_m3_large = 'm3_large'
 type_r3_2xlarge = 'r3.2xlarge'
 type_r3_xlarge = 'r3.xlarge'
 type_c3_xlarge = 'c3.xlarge'
@@ -157,3 +158,17 @@ template_application_east_1a = {
 
 template_application_east_1c = deepcopy(template_application_east_1a)
 template_application_east_1c['region'] = region_us_east_1c_private
+
+
+template_redis_east_1a = {
+        'image_id' : 'ami-82b8b3ea',
+        'key_name' : 'operations',
+        'instance_type' : 'm3.large',
+        'security_group_ids' : ['sg-c9d48aad'],
+        'region' : region_us_east_1a_private,
+        'ebs_optimized' : False
+        }
+
+template_redis_east_1c = deepcopy(template_redis_east_1a )
+template_redis_east_1c['region'] = region_us_east_1c_private
+
