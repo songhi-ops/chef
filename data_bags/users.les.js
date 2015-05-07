@@ -2,17 +2,23 @@
   "id": "les",
   "groups_default": [
     "svn_ruby",
+    "svn_melody_marketing",
     "svn_diamond",
+    "svn_diamond_marketing",
     "svn_songhi_schools"
   ],
   "groups_dev": [
     "svn_ruby",
+    "svn_melody_marketing",
     "svn_diamond",
+    "svn_diamond_marketing",
     "svn_songhi_schools"
   ],
   "groups_stage": [
     "svn_ruby",
+    "svn_melody_marketing",
     "svn_diamond",
+    "svn_diamond_marketing",
     "svn_songhi_schools"
   ],
   "ssh_keys": [
