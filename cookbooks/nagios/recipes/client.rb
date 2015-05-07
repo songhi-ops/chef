@@ -52,17 +52,25 @@ end
 
 
 if node.run_list.roles.include?("#{node[:songhi][:app_name]}-redis-master") or node.run_list.roles.include?("#{node[:songhi][:app_name]}-redis-slave")
+
     include_recipe 'cpan::bootstrap'
 
-    cpan_client 'Bundle::CPAN' do
-        action 'install'
-        install_type 'cpan_module'
-    end
+    # SAD NOTE: you must install manually Bundle::CPAN (so comment out the lines bellow, also: 
+    # ExtUtils::MakeMaker because-> sudo: sorry, you must have a tty to run sudo
+    # Test::More because-> sudo: sorry, you must have a tty to run sudo
+    # App::cpanminus
+    # Redis
 
-    cpan_client 'Redis' do
-        action 'install'
-        install_type 'cpan_module'
-    end
+    #cpan_client 'Bundle::CPAN' do
+    #    action 'install'
+    #    install_type 'cpan_module'
+    #end
+
+    #cpan_client 'Redis' do
+    #    action 'install'
+    #    install_type 'cpan_module'
+    #end
+
 
 end
 

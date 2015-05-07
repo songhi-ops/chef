@@ -1,4 +1,15 @@
 #!/usr/bin/perl -w
+
+    # SAD NOTE: you must install manually Bundle::CPAN (so comment out the lines bellow, also:
+    # ExtUtils::MakeMaker because-> sudo: sorry, you must have a tty to run sudo
+    # Test::More because-> sudo: sorry, you must have a tty to run sudo
+    # App::cpanminus
+    # Redis -> need to disable iptables temporarely to install this one
+
+
+
+
+
 #
 # ============================== SUMMARY =====================================
 #
