@@ -24,6 +24,9 @@
         }
       }
     },
+    "nagios": {
+        "status_url" : "http://localhost:8080/melody-match-server/rest/status"
+    },
     "iptables-ng": {
       "rules": {
         "filter": {

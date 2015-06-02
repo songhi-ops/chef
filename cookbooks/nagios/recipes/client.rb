@@ -12,8 +12,6 @@ plugins = [
 ]
 
 application = "#{node[:songhi][:app_name]}"
-Chef::Log.warn("HEEEY: #{application}")
-Chef::Log.warn("HEEEY: #{node.run_list.roles}")
 
 servers = search(:node, "chef_environment:#{node.environment} AND role:#{node[:songhi][:app_name]}-nagios-server", %w(ipaddress, fqdn))
 template "/etc/nagios/nrpe.cfg" do
