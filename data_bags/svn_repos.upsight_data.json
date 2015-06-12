@@ -1,0 +1,9 @@
+{
+  "id": "upsight_data",
+  "groups": {
+    "encrypted_data": "wOyq58fOwxDadYEbJWdU2hUFInxrhzLgo9fu9d0Pppg=\n",
+    "iv": "dtzUzVsGAWuh2nIVs3lhqQ==\n",
+    "version": 1,
+    "cipher": "aes-256-cbc"
+  }
+}

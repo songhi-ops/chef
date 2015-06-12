@@ -1,7 +1,8 @@
 {
   "id": "maxime",
   "groups_default": [
-    "svn_gametroopers_melody"
+    "svn_gametroopers_melody",
+    "svn_upsight_data"
   ],
   "groups_dev": [
     "svn_gametroopers_melody"
